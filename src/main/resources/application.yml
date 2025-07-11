@@ -1,6 +1,9 @@
 spring:
   profiles:
     default: local
+  docker:
+    compose:
+      enabled: false
 
 server:
   shutdown: graceful

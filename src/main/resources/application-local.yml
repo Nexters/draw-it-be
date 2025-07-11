@@ -9,9 +9,16 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
         show_sql: true
         format_sql: true
         highlight_sql: true
+  docker:
+    compose:
+      enabled: true
+      lifecycle-management: start_only
+      skip:
+        in-tests: false
 
 logging:
   level:
