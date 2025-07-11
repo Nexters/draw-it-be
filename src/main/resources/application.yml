@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    default: local
+
+server:
+  shutdown: graceful
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  override-with-generic-response: true

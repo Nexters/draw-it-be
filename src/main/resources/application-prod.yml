@@ -1,0 +1,26 @@
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://FIXME/drawit
+#    username: FIXME
+#    password: FIXME
+#  jpa:
+#    hibernate:
+#      ddl-auto: validate
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
+#        highlight_sql: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: info
+        type.descriptor.sql: info
+
+biz:
+  notification-channel:
+    error-message: https://discord.com/api/webhooks/1391031908841816135/KJeiZvze5XAZh1EkZWBJUGGj1s9zTUBdQDt0TcXU4uU5En-k1wixoaItVuityGDrUT0e
+    etc-message: https://discord.com/api/webhooks/1391031908841816135/KJeiZvze5XAZh1EkZWBJUGGj1s9zTUBdQDt0TcXU4uU5En-k1wixoaItVuityGDrUT0e
