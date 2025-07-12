@@ -29,6 +29,7 @@ dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
