@@ -32,7 +32,7 @@ class AuthenticateOAuthService(
             provider = OAuth2Provider.FACEBOOK,
             providerId = userInfo.id
         )
-        val jwtToken = tokenService.issueToken(userId, OAuth2Provider.FACEBOOK)
+        val jwtToken = tokenService.issue(userId, OAuth2Provider.FACEBOOK)
 
         return RedirectView("http://localhost:3000?data=${createResponse(jwtToken, userId)}")
     }

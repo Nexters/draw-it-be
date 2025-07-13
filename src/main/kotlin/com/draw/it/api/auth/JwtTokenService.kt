@@ -25,7 +25,9 @@ class JwtTokenService(
         Keys.hmacShaKeyFor(secretKey.toByteArray())
     }
 
-    override fun issueToken(userId: Long, provider: OAuth2Provider): String {
+    override fun issue(userId: Long, provider: OAuth2Provider): String {
+        tokenRepository.deleteByUserId(userId)
+        
         val accessToken = createAccessToken(userId, provider)
 
         val token = Token(
