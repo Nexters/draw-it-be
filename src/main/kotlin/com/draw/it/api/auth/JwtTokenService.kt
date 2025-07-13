@@ -41,14 +41,8 @@ class JwtTokenService(
     }
 
     override fun validateAndGetUserId(accessToken: String): Long? {
-        if (!validateToken(accessToken)) {
-            return null
-        }
-
-        if (isTokenExpired(accessToken)) {
-            return null
-        }
-
+        if (!validateToken(accessToken)) return null
+        if (isTokenExpired(accessToken)) return null
         return getUserIdFromToken(accessToken)
     }
 

@@ -21,6 +21,7 @@ class JwtAuthenticationFilter(
     ) {
         val authorizationHeader = request.getHeader("Authorization")
 
+        // todo: ?! 문법 조금 찾아보고 refactor.
         if (authorizationHeader?.startsWith("Bearer ") == true) {
             val token = authorizationHeader.substring(7)
             val userId = jwtTokenService.validateAndGetUserId(token)
