@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets
 
 @RestController
 @RequestMapping("/auth")
-class AuthController(
+class AuthenticateOAuthService(
     private val facebookAuthClient: FacebookAuthClient,
     private val createUserService: CreateUserService,
     private val objectMapper: ObjectMapper,
