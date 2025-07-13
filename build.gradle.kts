@@ -25,6 +25,7 @@ repositories {
 
 val kotlinLoggingVersion = "7.0.3"
 val springDocVersion = "2.7.0"
+val jwtVersion = "0.12.6"
 dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j")
 
@@ -32,6 +33,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
+
+    implementation("io.jsonwebtoken:jjwt-api:${jwtVersion}")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:${jwtVersion}")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:${jwtVersion}")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")

@@ -13,10 +13,11 @@ import java.nio.charset.StandardCharsets
 
 @RestController
 @RequestMapping("/auth")
-class FacebookAuthService(
+class AuthController(
     private val facebookAuthClient: FacebookAuthClient,
     private val createUserService: CreateUserService,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val tokenService: TokenService
 ) {
 
     @GetMapping("/facebook/callback")
@@ -31,8 +32,12 @@ class FacebookAuthService(
             provider = OAuth2Provider.FACEBOOK,
             providerId = userInfo.id
         )
-        val jwtToken = "temp"
+        val jwtToken = tokenService.issueToken(userId, OAuth2Provider.FACEBOOK)
 
+        return RedirectView("http://localhost:3000?data=${createResponse(jwtToken, userId)}")
+    }
+
+    private fun createResponse(jwtToken: String, userId: Long): String? {
         val data = mapOf(
             "success" to true,
             "token" to jwtToken,
@@ -40,7 +45,6 @@ class FacebookAuthService(
         )
         val jsonString = objectMapper.writeValueAsString(data)
         val encodedData = URLEncoder.encode(jsonString, StandardCharsets.UTF_8)
-
-        return RedirectView("http://localhost:3000?data=$encodedData")
+        return encodedData
     }
 }
