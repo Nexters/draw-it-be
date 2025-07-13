@@ -1,0 +1,27 @@
+package com.draw.it.api.user
+
+import org.springframework.stereotype.Service
+
+@Service
+class CreateUserService(
+    private val userRepository: UserRepository
+) {
+
+    fun getOrCreateUser(
+        name: String,
+        provider: OAuth2Provider,
+        providerId: String,
+    ): Long {
+        val existingUser = userRepository.findByProviderAndProviderId(provider, providerId)
+        if (existingUser != null) return existingUser.id!!
+
+        val user = User(
+            name = name,
+            provider = provider,
+            providerId = providerId,
+        )
+
+        val savedUser = userRepository.save(user)
+        return savedUser.id!!
+    }
+}

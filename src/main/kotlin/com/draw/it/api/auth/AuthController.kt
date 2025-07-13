@@ -1,33 +1,46 @@
 package com.draw.it.api.auth
 
-import org.springframework.http.ResponseEntity
+import com.draw.it.api.user.CreateUserService
+import com.draw.it.api.user.OAuth2Provider
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.servlet.view.RedirectView
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @RestController
 @RequestMapping("/auth")
-class FacebookAuthController(
-    private val facebookAuthService: FacebookAuthService
+class FacebookAuthService(
+    private val facebookAuthClient: FacebookAuthClient,
+    private val createUserService: CreateUserService,
+    private val objectMapper: ObjectMapper
 ) {
 
     @GetMapping("/facebook/callback")
     fun handleFacebookCallback(
         @RequestParam code: String
-    ): ResponseEntity<Map<String, Any>> {
-        val accessToken = facebookAuthService.exchangeCodeForToken(code)
-        val userInfo = facebookAuthService.getUserInfo(accessToken)
+    ): RedirectView {
+        val accessToken = facebookAuthClient.exchangeCodeForToken(code)
+        val userInfo = facebookAuthClient.getUserInfo(accessToken)
 
+        val userId = createUserService.getOrCreateUser(
+            name = userInfo.name,
+            provider = OAuth2Provider.FACEBOOK,
+            providerId = userInfo.id
+        )
         val jwtToken = "temp"
 
-        return ResponseEntity.ok(
-            mapOf(
-                "success" to true,
-                "token" to jwtToken,
-                "user" to userInfo
-            )
+        val data = mapOf(
+            "success" to true,
+            "token" to jwtToken,
+            "userId" to userId,
         )
-    }
+        val jsonString = objectMapper.writeValueAsString(data)
+        val encodedData = URLEncoder.encode(jsonString, StandardCharsets.UTF_8)
 
+        return RedirectView("http://localhost:3000?data=$encodedData")
+    }
 }

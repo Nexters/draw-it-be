@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class FacebookAuthService(
+class FacebookAuthClient(
     @Value("\${oauth.facebook.client-id}")
     private val appId: String,
     @Value("\${oauth.facebook.client-secret}")
     private val appSecret: String,
-    @Value("\${oauth.facebook.redirect-uri}")
-    private val redirectUri: String,
+    @Value("\${oauth.facebook.callback-uri}")
+    private val callbackUrl: String,
     private val restTemplate: RestTemplate = RestTemplate()
 ) {
 
@@ -20,7 +20,7 @@ class FacebookAuthService(
         val params = mapOf(
             "client_id" to appId,
             "client_secret" to appSecret,
-            "redirect_uri" to redirectUri,
+            "redirect_uri" to callbackUrl,
             "code" to code
         )
 
