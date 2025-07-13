@@ -22,7 +22,7 @@ class User(
     @Column(name = "birth_date")
     val birthDate: LocalDate? = null,
 
-    @Comment("OAuth 제공자 타입 (KAKAO, META)")
+    @Comment("OAuth 제공자 타입 (KAKAO, FACEBOOK)")
     @Enumerated(EnumType.STRING)
     @Column(name = "provider", nullable = false)
     val provider: OAuth2Provider,

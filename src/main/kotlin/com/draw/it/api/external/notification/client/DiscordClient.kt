@@ -1,11 +1,8 @@
 package com.draw.it.api.external.notification.client
 
-import com.draw.it.api.external.notification.dto.BizNotificationType
-import com.draw.it.api.external.notification.dto.DefaultNotificationMessage
-import com.draw.it.api.external.notification.dto.DiscordEmbeddedField
-import com.draw.it.api.external.notification.dto.DiscordEmbeddedMessage
-import com.draw.it.api.external.notification.dto.DiscordMessage
+import com.draw.it.api.external.notification.dto.*
 import com.draw.it.api.external.notification.properties.BizNotificationProperties
+import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.scheduling.annotation.Async
@@ -14,6 +11,7 @@ import org.springframework.web.client.RestClient
 
 private const val NOTIFICATION_EXECUTOR_NAME = "bizNotificationExecutor"
 
+@Profile("!local")
 @Component
 class DiscordClient(
     val notificationProperties: BizNotificationProperties
