@@ -1,7 +1,6 @@
 package com.draw.it.api.auth
 
 import com.draw.it.api.common.entity.BaseEntity
-import com.draw.it.api.user.User
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 
@@ -16,9 +15,8 @@ class Token(
     val id: Long? = null,
 
     @Comment("사용자 ID (users 테이블 참조)")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    val user: User,
+    @Column(name = "user_id", nullable = false)
+    val userId: Long,
 
     @Comment("액세스 토큰")
     @Column(name = "access_token", nullable = false)

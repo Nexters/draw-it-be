@@ -13,12 +13,33 @@ spring:
         show_sql: true
         format_sql: true
         highlight_sql: true
+        jdbc:
+          time_zone: UTC
   docker:
     compose:
       enabled: true
       lifecycle-management: start_only
       skip:
         in-tests: false
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: 1279366430568673
+            client-secret: 2039be12ac7063f0f1022e2f47b32b25
+            scope:
+              - public_profile
+        provider:
+          facebook:
+            authorization-uri: https://www.facebook.com/dialog/oauth
+            token-uri: https://graph.facebook.com/oauth/access_token
+            user-info-uri: https://graph.facebook.com/me?fields=id,name
+            user-name-attribute: id
+
+jwt:
+  secret: drawit-dev-secret
+  access-token-expiration: 604800 # 7 days
 
 logging:
   level:
