@@ -14,30 +14,49 @@ class JwtAuthenticationFilter(
     private val jwtTokenService: JwtTokenService
 ) : OncePerRequestFilter() {
 
+    companion object {
+        private const val AUTHORIZATION_HEADER = "Authorization"
+        private const val BEARER_PREFIX = "Bearer "
+        private const val TOKEN_PREFIX_LENGTH = 7
+    }
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val authorizationHeader = request.getHeader("Authorization")
+        val authorizationHeader = request.getHeader(AUTHORIZATION_HEADER)
 
-        // todo: ?! 문법 조금 찾아보고 refactor.
-        if (authorizationHeader?.startsWith("Bearer ") == true) {
-            val token = authorizationHeader.substring(7)
-            val userId = jwtTokenService.validateAndGetUserId(token)
-
-            if (userId != null && SecurityContextHolder.getContext().authentication == null) {
-                val authentication = UsernamePasswordAuthenticationToken(
-                    userId,
-                    null,
-                    emptyList()
-                ).apply {
-                    details = WebAuthenticationDetailsSource().buildDetails(request)
-                }
-                SecurityContextHolder.getContext().authentication = authentication
+        authorizationHeader?.let { header ->
+            if (header.startsWith(BEARER_PREFIX)) {
+                val token = header.substring(TOKEN_PREFIX_LENGTH)
+                authenticateUser(token, request)
             }
         }
 
         filterChain.doFilter(request, response)
+    }
+
+    private fun authenticateUser(token: String, request: HttpServletRequest) {
+        val userId = jwtTokenService.validateAndGetUserId(token)
+
+        if (userId != null && !isAlreadyAuthenticated()) {
+            val authentication = createAuthentication(userId, request)
+            SecurityContextHolder.getContext().authentication = authentication
+        }
+    }
+
+    private fun isAlreadyAuthenticated(): Boolean {
+        return SecurityContextHolder.getContext().authentication != null
+    }
+
+    private fun createAuthentication(userId: Long, request: HttpServletRequest): UsernamePasswordAuthenticationToken {
+        return UsernamePasswordAuthenticationToken(
+            userId,
+            null,
+            emptyList()
+        ).apply {
+            details = WebAuthenticationDetailsSource().buildDetails(request)
+        }
     }
 }
