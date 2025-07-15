@@ -14,6 +14,7 @@ class ReadUserService(
     @GetMapping("/me")
     fun getUserById(userId: Long): UserResponse? {
         val user = userRepository.getBy(userId)
+
         return UserResponse(
             id = user.id!!,
             name = user.name,
@@ -21,11 +22,11 @@ class ReadUserService(
             provider = user.provider
         )
     }
-}
 
-data class UserResponse(
-    val id: Long,
-    val name: String,
-    val birthDate: LocalDate?,
-    val provider: OAuth2Provider
-)
+    data class UserResponse(
+        val id: Long,
+        val name: String,
+        val birthDate: LocalDate?,
+        val provider: OAuth2Provider
+    )
+}
