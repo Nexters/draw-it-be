@@ -1,6 +1,6 @@
 package com.draw.it.api.auth
 
-import com.draw.it.api.user.OAuth2Provider
+import com.draw.it.api.user.domain.OAuth2Provider
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value

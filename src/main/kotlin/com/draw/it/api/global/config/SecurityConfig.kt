@@ -1,6 +1,6 @@
 package com.draw.it.api.global.config
 
-import com.draw.it.api.auth.JwtAuthenticationFilter
+import com.draw.it.api.auth.AuthenticateJwt
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -15,7 +15,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    private val jwtAuthenticationFilter: JwtAuthenticationFilter
+    private val authenticateJwt: AuthenticateJwt
 ) {
 
     @Bean
@@ -30,7 +30,7 @@ class SecurityConfig(
                     .requestMatchers("/api-docs/**", "/docs/**").permitAll()
                     .anyRequest().authenticated()
             }
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(authenticateJwt, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
     }

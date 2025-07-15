@@ -1,4 +1,4 @@
-package com.draw.it.api.user
+package com.draw.it.api.user.domain
 
 import com.draw.it.api.common.entity.BaseEntity
 import jakarta.persistence.*

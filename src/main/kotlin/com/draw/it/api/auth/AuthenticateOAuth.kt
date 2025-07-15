@@ -1,7 +1,7 @@
 package com.draw.it.api.auth
 
-import com.draw.it.api.user.CreateUserService
-import com.draw.it.api.user.OAuth2Provider
+import com.draw.it.api.user.CreateUser
+import com.draw.it.api.user.domain.OAuth2Provider
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,9 +13,9 @@ import java.nio.charset.StandardCharsets
 
 @RestController
 @RequestMapping("/auth")
-class AuthenticateOAuthService(
+class AuthenticateOAuth(
     private val facebookAuthClient: FacebookAuthClient,
-    private val createUserService: CreateUserService,
+    private val createUser: CreateUser,
     private val objectMapper: ObjectMapper,
     private val tokenService: TokenService
 ) {
@@ -27,7 +27,7 @@ class AuthenticateOAuthService(
         val accessToken = facebookAuthClient.exchangeCodeForToken(code)
         val userInfo = facebookAuthClient.getUserInfo(accessToken)
 
-        val userId = createUserService.getOrCreateUser(
+        val userId = createUser.getOrCreateUser(
             name = userInfo.name,
             provider = OAuth2Provider.FACEBOOK,
             providerId = userInfo.id

@@ -1,4 +1,4 @@
-package com.draw.it.api.user
+package com.draw.it.api.user.domain
 
 interface UserRepository {
     fun save(user: User): User

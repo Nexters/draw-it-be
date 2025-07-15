@@ -1,5 +1,8 @@
-package com.draw.it.api.user
+package com.draw.it.api.user.infra
 
+import com.draw.it.api.user.domain.OAuth2Provider
+import com.draw.it.api.user.domain.User
+import com.draw.it.api.user.domain.UserRepository
 import org.springframework.stereotype.Repository
 
 @Repository

@@ -1,9 +1,12 @@
 package com.draw.it.api.user
 
+import com.draw.it.api.user.domain.OAuth2Provider
+import com.draw.it.api.user.domain.User
+import com.draw.it.api.user.domain.UserRepository
 import org.springframework.stereotype.Service
 
 @Service
-class CreateUserService(
+class CreateUser(
     private val userRepository: UserRepository
 ) {
 
