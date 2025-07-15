@@ -46,14 +46,6 @@ class JwtTokenService(
         return getUserIdFromToken(accessToken)
     }
 
-    override fun revokeToken(accessToken: String) {
-        tokenRepository.deleteByAccessToken(accessToken)
-    }
-
-    override fun revokeAllUserTokens(userId: Long) {
-        tokenRepository.deleteByUserId(userId)
-    }
-
     private fun createAccessToken(userId: Long, provider: OAuth2Provider): String {
         val now = Instant.now()
         val expiration = now.plus(accessTokenExpiration, ChronoUnit.SECONDS)
