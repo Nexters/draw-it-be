@@ -1,8 +1,12 @@
 package com.draw.it.api.user
 
+import com.draw.it.api.user.domain.OAuth2Provider
 import com.draw.it.common.IntegrationTest
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.context.jdbc.Sql
 
 @IntegrationTest
@@ -19,5 +23,26 @@ class WithdrawUserTest {
 
     @Test
     fun `회원을 탈퇴한다`() {
+        val userId = createUser.getOrCreateUser(
+            name = "홍길동",
+            provider = OAuth2Provider.KAKAO,
+            providerId = "12345"
+        )
+        authenticateWith(userId)
+
+        sut.withdrawUser()
+
+        Assertions.assertThrows(NoSuchElementException::class.java) {
+            getUser.getUserById(userId)
+        }
+    }
+
+    private fun authenticateWith(userId: Long) {
+        val authentication = UsernamePasswordAuthenticationToken(
+            userId,
+            null,
+            emptyList()
+        )
+        SecurityContextHolder.getContext().authentication = authentication
     }
 }
