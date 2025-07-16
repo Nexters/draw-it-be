@@ -1,23 +1,18 @@
 package com.draw.it.api.user
 
 import com.draw.it.api.user.domain.OAuth2Provider
+import com.draw.it.common.IntegrationTest
 import org.approvaltests.Approvals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
-import org.springframework.transaction.annotation.Transactional
 import kotlin.test.assertEquals
 
-@SpringBootTest
-@ActiveProfiles("test")
-@Transactional
+@IntegrationTest
 @Sql("/user.sql")
 class CreateUserTest {
     @Autowired
     private lateinit var createUser: CreateUser
-
     @Autowired
     private lateinit var getUser: ReadUser
 
