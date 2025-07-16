@@ -14,7 +14,7 @@ class CreateUserTest {
     @Autowired
     private lateinit var createUser: CreateUser
     @Autowired
-    private lateinit var getUser: ReadUser
+    private lateinit var getUser: GetUser
 
     @Test
     fun `새로운 사용자를 생성하고 저장한다`() {

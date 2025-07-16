@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 @RestController
 @RequestMapping("/user")
-class ReadUser(
+class GetUser(
     private val userRepository: UserRepository
 ) {
 
