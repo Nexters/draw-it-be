@@ -16,51 +16,57 @@ class KakaoAuthClient(
     private val clientId: String,
     @Value("\${oauth.kakao.callback-uri}")
     private val redirectUri: String,
+    private val restTemplate: RestTemplate,
 ) {
-    private val restTemplate: RestTemplate = RestTemplate()
 
     fun exchangeCodeForToken(code: String): KakaoAccessTokenResponse {
-        val tokenUrl = "https://kauth.kakao.com/oauth/token"
-        
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_FORM_URLENCODED
-        
+
         val params: MultiValueMap<String, String> = LinkedMultiValueMap()
-        params.add("grant_type", "authorization_code")
-        params.add("client_id", clientId)
-        params.add("redirect_uri", redirectUri)
-        params.add("code", code)
-        
+        params.add(GRANT_TYPE_KEY, AUTHORIZATION_CODE_GRANT_TYPE)
+        params.add(CLIENT_ID_KEY, clientId)
+        params.add(REDIRECT_URI_KEY, redirectUri)
+        params.add(CODE_KEY, code)
+
         val request = HttpEntity(params, headers)
-        
-        val response = restTemplate.postForObject(tokenUrl, request, KakaoAccessTokenResponse::class.java)
+
+        val response = restTemplate.postForObject(KAKAO_TOKEN_URL, request, KakaoAccessTokenResponse::class.java)
             ?: throw RuntimeException("Failed to exchange code for token")
-        
+
         return response
     }
 
     fun getUserInfo(accessToken: String): KakaoUserInfo {
-        val userInfoUrl = "https://kapi.kakao.com/v2/user/me"
-        
         val headers = HttpHeaders()
         headers.setBearerAuth(accessToken)
         headers.contentType = MediaType.APPLICATION_FORM_URLENCODED
-        
+
         val request = HttpEntity<String>(headers)
-        
+
         val response = restTemplate.exchange(
-            userInfoUrl,
+            KAKAO_USER_INFO_URL,
             HttpMethod.GET,
             request,
             KakaoUserInfoResponse::class.java
         )
-        
-        val kakaoUserResponse = response.body 
+
+        val kakaoUserResponse = response.body
             ?: throw RuntimeException("Failed to fetch user info")
-        
+
         return KakaoUserInfo(
             id = kakaoUserResponse.id.toString(),
             name = kakaoUserResponse.kakaoAccount.profile.nickname
         )
+    }
+
+    companion object {
+        private const val KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token"
+        private const val KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me"
+        private const val AUTHORIZATION_CODE_GRANT_TYPE = "authorization_code"
+        private const val GRANT_TYPE_KEY = "grant_type"
+        private const val CLIENT_ID_KEY = "client_id"
+        private const val REDIRECT_URI_KEY = "redirect_uri"
+        private const val CODE_KEY = "code"
     }
 }

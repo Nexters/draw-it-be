@@ -18,12 +18,12 @@ class AuthenticateOAuth(
     private val kakaoAuthClient: KakaoAuthClient,
     private val createUser: CreateUser,
     private val objectMapper: ObjectMapper,
-    private val tokenService: TokenService
+    private val tokenService: TokenService,
 ) {
 
     @GetMapping("/facebook/callback")
     fun handleFacebookCallback(
-        @RequestParam code: String
+        @RequestParam code: String,
     ): RedirectView {
         val accessToken = facebookAuthClient.exchangeCodeForToken(code)
         val userInfo = facebookAuthClient.getUserInfo(accessToken)
@@ -40,8 +40,8 @@ class AuthenticateOAuth(
 
     @GetMapping("/kakao/callback")
     fun handleKakaoCallback(
-        @RequestParam code: String
-    ): String? {
+        @RequestParam code: String,
+    ): AuthTokenResponse {
         val tokenResponse = kakaoAuthClient.exchangeCodeForToken(code)
         val userInfo = kakaoAuthClient.getUserInfo(tokenResponse.accessToken)
 
@@ -52,7 +52,10 @@ class AuthenticateOAuth(
         )
         val jwtToken = tokenService.issue(userId, OAuth2Provider.KAKAO)
 
-        return createResponse(jwtToken, userId)
+        return AuthTokenResponse(
+            token = jwtToken,
+            userId = userId
+        )
     }
 
     private fun createResponse(jwtToken: String, userId: Long): String? {
@@ -65,4 +68,9 @@ class AuthenticateOAuth(
         val encodedData = URLEncoder.encode(jsonString, StandardCharsets.UTF_8)
         return encodedData
     }
+
+    data class AuthTokenResponse(
+        val token: String,
+        val userId: Long,
+    )
 }
