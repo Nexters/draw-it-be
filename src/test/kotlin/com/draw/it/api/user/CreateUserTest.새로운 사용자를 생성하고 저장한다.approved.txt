@@ -1,0 +1,1 @@
+UserResponse(id=1, name=홍길동, birthDate=null, provider=KAKAO)

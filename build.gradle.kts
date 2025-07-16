@@ -49,6 +49,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("io.mockk:mockk:1.13.5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("com.approvaltests:approvaltests:22.3.2")
 }
 
 kotlin {
