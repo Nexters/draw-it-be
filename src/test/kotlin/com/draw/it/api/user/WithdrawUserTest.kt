@@ -5,8 +5,6 @@ import com.draw.it.common.IntegrationTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.context.jdbc.Sql
 
 @IntegrationTest
@@ -28,21 +26,11 @@ class WithdrawUserTest {
             provider = OAuth2Provider.KAKAO,
             providerId = "12345"
         )
-        authenticateWith(userId)
 
-        sut.withdrawUser()
+        sut.withdrawUser(userId)
 
         Assertions.assertThrows(NoSuchElementException::class.java) {
             getUser.getUserById(userId)
         }
-    }
-
-    private fun authenticateWith(userId: Long) {
-        val authentication = UsernamePasswordAuthenticationToken(
-            userId,
-            null,
-            emptyList()
-        )
-        SecurityContextHolder.getContext().authentication = authentication
     }
 }
