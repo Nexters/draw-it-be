@@ -1,4 +1,4 @@
-package com.draw.it.api.doodle.domain
+package com.draw.it.api.doodle
 
 import com.draw.it.api.common.entity.BaseEntity
 import jakarta.persistence.*
