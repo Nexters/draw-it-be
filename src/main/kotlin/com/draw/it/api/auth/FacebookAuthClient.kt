@@ -12,7 +12,7 @@ class FacebookAuthClient(
     private val appSecret: String,
     @Value("\${oauth.facebook.callback-uri}")
     private val callbackUrl: String,
-    private val restTemplate: RestTemplate = RestTemplate()
+    private val restTemplate: RestTemplate,
 ) {
 
     fun exchangeCodeForToken(code: String): String {

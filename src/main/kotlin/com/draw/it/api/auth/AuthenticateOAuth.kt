@@ -15,14 +15,15 @@ import java.nio.charset.StandardCharsets
 @RequestMapping("/auth")
 class AuthenticateOAuth(
     private val facebookAuthClient: FacebookAuthClient,
+    private val kakaoAuthClient: KakaoAuthClient,
     private val createUser: CreateUser,
     private val objectMapper: ObjectMapper,
-    private val tokenService: TokenService
+    private val tokenService: TokenService,
 ) {
 
     @GetMapping("/facebook/callback")
     fun handleFacebookCallback(
-        @RequestParam code: String
+        @RequestParam code: String,
     ): RedirectView {
         val accessToken = facebookAuthClient.exchangeCodeForToken(code)
         val userInfo = facebookAuthClient.getUserInfo(accessToken)
@@ -37,6 +38,26 @@ class AuthenticateOAuth(
         return RedirectView("http://localhost:3000?data=${createResponse(jwtToken, userId)}")
     }
 
+    @GetMapping("/kakao/callback")
+    fun handleKakaoCallback(
+        @RequestParam code: String,
+    ): AuthTokenResponse {
+        val tokenResponse = kakaoAuthClient.exchangeCodeForToken(code)
+        val userInfo = kakaoAuthClient.getUserInfo(tokenResponse.accessToken)
+
+        val userId = createUser.getOrCreateUser(
+            name = userInfo.name,
+            provider = OAuth2Provider.KAKAO,
+            providerId = userInfo.id
+        )
+        val jwtToken = tokenService.issue(userId, OAuth2Provider.KAKAO)
+
+        return AuthTokenResponse(
+            token = jwtToken,
+            userId = userId
+        )
+    }
+
     private fun createResponse(jwtToken: String, userId: Long): String? {
         val data = mapOf(
             "success" to true,
@@ -47,4 +68,9 @@ class AuthenticateOAuth(
         val encodedData = URLEncoder.encode(jsonString, StandardCharsets.UTF_8)
         return encodedData
     }
+
+    data class AuthTokenResponse(
+        val token: String,
+        val userId: Long,
+    )
 }
