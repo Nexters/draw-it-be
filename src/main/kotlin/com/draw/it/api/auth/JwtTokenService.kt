@@ -18,7 +18,6 @@ class JwtTokenService(
     private val secretKey: String,
     @Value("\${jwt.expiration.access:86400}")
     private val accessTokenExpiration: Long,
-    private val tokenRepository: TokenRepository
 ) : TokenService {
 
     private val key: SecretKey by lazy {
@@ -26,18 +25,7 @@ class JwtTokenService(
     }
 
     override fun issue(userId: Long, provider: OAuth2Provider): String {
-        tokenRepository.deleteByUserId(userId)
-        
-        val accessToken = createAccessToken(userId, provider)
-
-        val token = Token(
-            userId = userId,
-            accessToken = accessToken
-        )
-
-        tokenRepository.save(token)
-
-        return accessToken
+        return createAccessToken(userId, provider)
     }
 
     override fun validateAndGetUserId(accessToken: String): Long? {
