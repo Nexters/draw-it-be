@@ -20,6 +20,10 @@ class UserRepositoryImpl(
         return userJpaRepository.findByProviderAndProviderId(provider, providerId)
     }
 
+    override fun findById(id: Long): User? {
+        return userJpaRepository.findById(id).orElse(null)
+    }
+
     override fun getBy(id: Long): User {
         return userJpaRepository.findById(id)
             .orElseThrow { NoSuchElementException("User with id $id not found") }
