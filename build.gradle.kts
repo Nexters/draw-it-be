@@ -75,7 +75,7 @@ tasks.withType<Test> {
 
 jib {
     from {
-        image = "openjdk:21-jre-slim"
+        image = "eclipse-temurin:21-jre"
     }
     to {
         image = "draw-it-api"
