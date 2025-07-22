@@ -30,6 +30,7 @@ jobs:
       - name: Save Docker image as tar
         run: |
           docker save draw-it-api:latest -o draw-it-api.tar
+          chmod 644 draw-it-api.tar
 
       - name: Copy image to EC2 and deploy
         uses: appleboy/scp-action@v0.1.7
