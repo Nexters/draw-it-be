@@ -24,8 +24,8 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build -x test
 
-      - name: Build and push Docker image with Jib
-        run: ./gradlew jib
+      - name: Build Docker image with Jib
+        run: ./gradlew jibDockerBuild
 
       - name: Save Docker image as tar
         run: |
