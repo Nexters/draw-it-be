@@ -1,6 +1,7 @@
 plugins {
     id("org.springframework.boot") version "3.4.1"
     id("io.spring.dependency-management") version "1.1.7"
+    id("com.google.cloud.tools.jib") version "3.4.0"
 
     val kotlinVersion = "1.9.25"
     kotlin("jvm") version kotlinVersion
@@ -70,4 +71,21 @@ tasks.getByName("jar") {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+jib {
+    from {
+        image = "openjdk:21-jre-slim"
+    }
+    to {
+        image = "draw-it-api"
+        tags = setOf("latest", version.toString())
+    }
+    container {
+        ports = listOf("8080")
+        jvmFlags = listOf("-Xms512m", "-Xmx1024m")
+        environment = mapOf(
+            "SPRING_PROFILES_ACTIVE" to "prod"
+        )
+    }
 }

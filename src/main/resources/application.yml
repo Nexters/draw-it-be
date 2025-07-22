@@ -7,8 +7,6 @@ spring:
 
 server:
   shutdown: graceful
-  servlet:
-    context-path: /api
 
 springdoc:
   api-docs:
