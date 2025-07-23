@@ -32,7 +32,7 @@ jobs:
           docker save draw-it-api:latest -o draw-it-api.tar
           chmod 644 draw-it-api.tar
 
-      - name: Copy image to EC2 and deploy
+      - name: Copy image to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -42,16 +42,28 @@ jobs:
           source: "draw-it-api.tar"
           target: "/tmp/"
 
-      - name: Deploy on EC2
+      - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker stop draw-it-api || true
-            docker rm draw-it-api || true
+            # 기존 컨테이너 종료
+            cd /root
+            docker-compose down || true
+            
+            # 기존 이미지 제거
             docker rmi draw-it-api:latest || true
+            
+            # 새 이미지 로드
             docker load -i /tmp/draw-it-api.tar
-            docker run -d --name draw-it-api --env-file /root/.env -p 8080:8080 draw-it-api:latest
+            
+            # Docker Compose로 서비스 시작
+            docker-compose up -d
+            
+            # 임시 파일 정리
             rm /tmp/draw-it-api.tar
+            
+            # 배포 상태 확인
+            docker-compose ps

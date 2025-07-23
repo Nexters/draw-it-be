@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mysql-server:
+    image: mysql:8.1
+    container_name: mysql-server-new
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_DATABASE: "drawit"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - /data/mysql:/var/lib/mysql
+    command: --bind-address=0.0.0.0 --default-authentication-plugin=mysql_native_password
+    networks:
+      - app-network
+
+  draw-it-api:
+    image: draw-it-api
+    container_name: draw-it-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DB_USERNAME: "${DB_USERNAME}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+    depends_on:
+      - mysql-server
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
