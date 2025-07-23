@@ -49,39 +49,9 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Load new image
+            docker stop draw-it-api || true
+            docker rm draw-it-api || true
+            docker rmi draw-it-api:latest || true
             docker load -i /tmp/draw-it-api.tar
-            
-            # Graceful shutdown with timeout
-            if docker ps | grep -q draw-it-api; then
-              echo "Stopping existing container..."
-              docker stop draw-it-api --time=30 || true
-            fi
-            
-            # Remove old container
-            docker container rm draw-it-api || true
-            
-            # Clean up old images (keep last 3 versions)
-            docker images draw-it-api --format "table {{.Repository}}:{{.Tag}}\t{{.CreatedAt}}" | tail -n +2 | sort -k2 -r | tail -n +4 | awk '{print $1}' | xargs -r docker rmi || true
-            
-            # Run new container with health check
-            docker run -d \
-              --name draw-it-api \
-              --env-file /root/.env \
-              --restart unless-stopped \
-              --health-cmd="curl -f http://localhost:8080/health || exit 1" \
-              --health-interval=30s \
-              --health-timeout=10s \
-              --health-retries=3 \
-              -p 8080:8080 \
-              draw-it-api:latest
-            
-            # Wait for container to be healthy
-            echo "Waiting for container to be healthy..."
-            timeout 120 bash -c 'until docker inspect --format="{{.State.Health.Status}}" draw-it-api | grep -q healthy; do sleep 5; done' || echo "Health check timeout"
-            
-            # Clean up
-            rm -f /tmp/draw-it-api.tar
-            
-            # Show container status
-            docker ps | grep draw-it-api || echo "Container not running"
+            docker run -d --name draw-it-api --env-file /root/.env -p 8080:8080 draw-it-api:latest
+            rm /tmp/draw-it-api.tar
