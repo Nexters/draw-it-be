@@ -53,5 +53,5 @@ jobs:
             docker load -i /tmp/draw-it-api.tar
             docker stop draw-it-api || true
             docker rm draw-it-api || true
-            docker run -d --name draw-it-api -p 8080:8080 draw-it-api:latest
+            docker run -d --name draw-it-api --env-file /root/.env -p 8080:8080 draw-it-api:latest
             rm /tmp/draw-it-api.tar
