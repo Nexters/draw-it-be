@@ -1,4 +1,4 @@
-package com.draw.it.api.project
+package com.draw.it.api.project.domain
 
 import com.draw.it.api.common.entity.BaseEntity
 import jakarta.persistence.*
@@ -34,8 +34,8 @@ class Project(
     val isDeleted: Boolean = false,
 
     @Comment("에디터 배치 상태 (JSON 형태 텍스트)")
-    @Column(name = "editor_state", columnDefinition = "TEXT")
-    val editorState: String? = null,
+    @Column(name = "editor_coordination_state", columnDefinition = "TEXT")
+    val editorCoordinationState: String? = null,
 
     @Comment("프로젝트 식별자 UUID")
     @Column(name = "uuid", nullable = false)
