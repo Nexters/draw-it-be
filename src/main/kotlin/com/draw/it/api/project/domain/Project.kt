@@ -40,4 +40,21 @@ class Project(
     @Comment("프로젝트 식별자 UUID")
     @Column(name = "uuid", nullable = false)
     val uuid: String
-) : BaseEntity()
+) : BaseEntity() {
+    companion object {
+        fun create(
+            userId: Long,
+            topic: String,
+            message: String,
+            backgroundColor: String
+        ): Project {
+            return Project(
+                userId = userId,
+                topic = topic,
+                message = message,
+                backgroundColor = backgroundColor,
+                uuid = java.util.UUID.randomUUID().toString()
+            )
+        }
+    }
+}
