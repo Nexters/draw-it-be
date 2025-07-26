@@ -4,10 +4,11 @@ import com.draw.it.api.user.domain.OAuth2Provider
 import com.draw.it.api.user.domain.User
 import com.draw.it.api.user.domain.UserRepository
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 
 @Repository
 class UserRepositoryImpl(
-    private val userJpaRepository: UserJpaRepository
+    private val userJpaRepository: UserJpaRepository,
 ) : UserRepository {
     override fun save(user: User): User {
         return userJpaRepository.save(user)
@@ -15,7 +16,7 @@ class UserRepositoryImpl(
 
     override fun findByProviderAndProviderId(
         provider: OAuth2Provider,
-        providerId: String
+        providerId: String,
     ): User? {
         return userJpaRepository.findByProviderAndProviderId(provider, providerId)
     }
@@ -31,5 +32,17 @@ class UserRepositoryImpl(
 
     override fun deleteById(id: Long) {
         userJpaRepository.deleteById(id)
+    }
+
+    override fun updateNameAndBirthDate(id: Long, name: String, birthDate: LocalDate?) {
+        val user = getBy(id)
+        val updatedUser = User(
+            id = user.id,
+            name = name,
+            birthDate = birthDate,
+            provider = user.provider,
+            providerId = user.providerId
+        )
+        userJpaRepository.save(updatedUser)
     }
 }
