@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class DoodleRepositoryImpl(
-    private val doodleJpaRepository: DoodleJpaRepository
+    private val doodleJpaRepository: DoodleJpaRepository,
 ) : DoodleRepository {
 
     override fun save(doodle: Doodle): Doodle {
@@ -19,5 +19,9 @@ class DoodleRepositoryImpl(
 
     override fun findByProjectId(projectId: Long): List<Doodle> {
         return doodleJpaRepository.findByProjectId(projectId)
+    }
+
+    override fun delete(doodle: Doodle) {
+        doodleJpaRepository.delete(doodle)
     }
 }

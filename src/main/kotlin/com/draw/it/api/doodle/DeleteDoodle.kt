@@ -1,0 +1,49 @@
+package com.draw.it.api.doodle
+
+import com.draw.it.api.common.exception.BizException
+import com.draw.it.api.common.exception.ErrorCode
+import com.draw.it.api.doodle.domain.DoodleRepository
+import com.draw.it.api.project.domain.ProjectRepository
+import io.swagger.v3.oas.annotations.Parameter
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+@RequestMapping("/project/{projectId}/doodle")
+class DeleteDoodle(
+    private val doodleRepository: DoodleRepository,
+    private val projectRepository: ProjectRepository,
+) {
+    @DeleteMapping("/{doodleId}")
+    fun deleteDoodle(
+        @Parameter(description = "프로젝트 ID", required = true)
+        @PathVariable projectId: Long,
+        @Parameter(description = "두들 ID", required = true)
+        @PathVariable doodleId: Long,
+        @AuthenticationPrincipal userId: Long,
+    ) {
+        // 프로젝트 존재 여부 및 소유자 확인
+        val project = projectRepository.findById(projectId)
+            ?: throw BizException(ErrorCode.BAD_REQUEST, "존재하지 않는 프로젝트입니다")
+
+        if (project.userId != userId) {
+            throw BizException(ErrorCode.FORBIDDEN, "프로젝트 소유자만 두들을 삭제할 수 있습니다")
+        }
+
+        // 두들 존재 여부 확인
+        val doodle = doodleRepository.findById(doodleId)
+            ?: throw BizException(ErrorCode.BAD_REQUEST, "존재하지 않는 두들입니다")
+
+        // 두들이 해당 프로젝트에 속하는지 확인
+        if (doodle.projectId != projectId) {
+            throw BizException(ErrorCode.BAD_REQUEST, "해당 프로젝트의 두들이 아닙니다")
+        }
+
+        // 소프트 삭제 수행
+        doodle.delete()
+        doodleRepository.save(doodle)
+    }
+}
