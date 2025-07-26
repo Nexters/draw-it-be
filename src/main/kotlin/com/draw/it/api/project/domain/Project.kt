@@ -3,10 +3,14 @@ package com.draw.it.api.project.domain
 import com.draw.it.api.common.entity.BaseEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 
 @Comment("프로젝트")
 @Entity
 @Table(name = "projects")
+@SQLDelete(sql = "UPDATE projects SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 class Project(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +35,7 @@ class Project(
 
     @Comment("삭제 여부")
     @Column(name = "is_deleted", nullable = false)
-    val isDeleted: Boolean = false,
+    var isDeleted: Boolean = false,
 
     @Comment("에디터 배치 상태 (JSON 형태 텍스트)")
     @Column(name = "editor_coordination_state", columnDefinition = "TEXT")

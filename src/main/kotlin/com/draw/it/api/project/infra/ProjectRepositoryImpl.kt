@@ -20,4 +20,8 @@ class ProjectRepositoryImpl(
     override fun findByUuid(uuid: String): Project? {
         return projectJpaRepository.findByUuid(uuid)
     }
+
+    override fun delete(project: Project) {
+        projectJpaRepository.delete(project)
+    }
 }
