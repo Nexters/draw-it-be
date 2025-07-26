@@ -2,19 +2,39 @@ package com.draw.it.api.project
 
 import com.draw.it.api.project.domain.Project
 import com.draw.it.api.project.domain.ProjectRepository
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Tag(name = "Project", description = "프로젝트 관리 API")
 @RestController
 @RequestMapping("/project")
 class GetProject(
     private val projectRepository: ProjectRepository
 ) {
 
+    @Operation(summary = "프로젝트 조회", description = "UUID로 프로젝트를 조회합니다")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "프로젝트 조회 성공",
+                content = [Content(schema = Schema(implementation = GetProjectResponse::class))]
+            ),
+            ApiResponse(responseCode = "404", description = "프로젝트를 찾을 수 없습니다")
+        ]
+    )
     @GetMapping("/{uuid}")
-    fun getProjectByUuid(@PathVariable uuid: String): GetProjectResponse {
+    fun getProjectByUuid(
+        @PathVariable uuid: String
+    ): GetProjectResponse {
         val project = projectRepository.findByUuid(uuid)
             ?: throw RuntimeException("Project not found with uuid: $uuid")
 
@@ -29,7 +49,7 @@ class GetProject(
             message = this.message,
             backgroundColor = this.backgroundColor,
             uuid = this.uuid,
-            editorState = this.editorCoordinationState,
+            editorCoordinationState = this.editorCoordinationState,
             createdAt = this.createdAt,
             updatedAt = this.updatedAt
         )
@@ -43,7 +63,7 @@ data class GetProjectResponse(
     val message: String,
     val backgroundColor: String,
     val uuid: String,
-    val editorState: String?,
+    val editorCoordinationState: String?,
     val createdAt: java.time.LocalDateTime?,
     val updatedAt: java.time.LocalDateTime?
 )
