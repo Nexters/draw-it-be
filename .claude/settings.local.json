@@ -5,7 +5,8 @@
       "Bash(mkdir:*)",
       "Bash(./gradlew test:*)",
       "Bash(./gradlew:*)",
-      "Bash(docker-compose up:*)"
+      "Bash(docker-compose up:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }

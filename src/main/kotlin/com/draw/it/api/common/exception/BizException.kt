@@ -5,5 +5,5 @@ open class BizException(
     val log: String
 ) : RuntimeException() {
     override val message: String?
-        get() = errorCode.message
+        get() = "[${errorCode.code}/${errorCode.message}] - $log"
 }

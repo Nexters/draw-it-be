@@ -19,14 +19,14 @@ import org.springframework.web.filter.OncePerRequestFilter
 
 class ExceptionHandleFilter(
     private val objectMapper: ObjectMapper,
-    private val bizNotificationClient: BizNotificationClient
-): OncePerRequestFilter() {
+    private val bizNotificationClient: BizNotificationClient,
+) : OncePerRequestFilter() {
     private val log = KotlinLogging.logger {}
 
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         try {
             filterChain.doFilter(request, response)
@@ -34,7 +34,7 @@ class ExceptionHandleFilter(
             val message = e.alertMessage(e.errorCode.code, e.log)
             val globalResponse = createGlobalResponse(e.message)
 
-            log.warn { "BizException occurred: ${e.errorCode.code} - ${e.message}" }
+            log.warn(e) { "BizException occurred: ${e.errorCode.code} - ${e.message}" }
             bizNotificationClient.sendUsual(
                 createNotificationMessage(message),
                 BizNotificationType.INFO
@@ -46,7 +46,7 @@ class ExceptionHandleFilter(
             val errorMessage = e.alertMessage(500)
             val globalResponse = createGlobalResponse(e.message)
 
-            log.error { "Exception occurred: ${e.message}" }
+            log.error(e) { "Exception occurred: ${e.message}" }
             bizNotificationClient.sendError(
                 createNotificationMessage(errorMessage)
             )

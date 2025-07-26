@@ -27,6 +27,7 @@ class SecurityConfig(
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/anonymous/**").permitAll()
                     .requestMatchers("/api-docs/**", "/docs/**", "/swagger-ui/**", "/health").permitAll()
                     .anyRequest().authenticated()
             }
