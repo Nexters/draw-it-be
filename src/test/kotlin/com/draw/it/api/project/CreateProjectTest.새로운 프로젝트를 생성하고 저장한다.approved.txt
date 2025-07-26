@@ -1,0 +1,8 @@
+{
+  "id" : 1,
+  "userId" : 1,
+  "topic" : "테스트 프로젝트",
+  "message" : "테스트 메시지",
+  "backgroundColor" : "#FFFFFF",
+  "uuid" : "test-uuid"
+}
