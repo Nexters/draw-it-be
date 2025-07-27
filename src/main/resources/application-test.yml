@@ -31,3 +31,12 @@ biz:
   notification-channel:
     error-message: none
     etc-message: none
+
+aws:
+  s3:
+    access-key: FIXME
+    secret-key: FIXME
+    region: FIXME
+    bucket-name: FIXME
+    endpoint: FIXME
+    phase: FIXME
