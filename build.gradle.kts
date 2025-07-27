@@ -27,8 +27,11 @@ repositories {
 val kotlinLoggingVersion = "7.0.3"
 val springDocVersion = "2.7.0"
 val jwtVersion = "0.12.6"
+val awsVersion = "2.28.29"
 dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j")
+	
+	implementation("software.amazon.awssdk:s3:${awsVersion}")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")

@@ -25,3 +25,11 @@ oauth:
   kakao:
     client-id: FIXME
     callback-uri: FIXME
+
+aws:
+  s3:
+    access-key: FIXME
+    secret-key: FIXME
+    region: kr-standard
+    bucket-name: dodoodle
+    endpoint: https://kr.object.ncloudstorage.com
