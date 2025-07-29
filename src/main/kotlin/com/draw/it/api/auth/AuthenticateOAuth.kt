@@ -30,12 +30,6 @@ class AuthenticateOAuth(
 ) {
 
     @Operation(summary = "Facebook OAuth 콜백", description = "Facebook OAuth 인증 콜백을 처리합니다")
-    @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "302", description = "인증 성공 후 리다이렉트"),
-            ApiResponse(responseCode = "400", description = "인증 실패")
-        ]
-    )
     @GetMapping("/facebook/callback")
     fun handleFacebookCallback(
         @Parameter(description = "Facebook OAuth 코드", required = true) @RequestParam code: String,
@@ -50,7 +44,7 @@ class AuthenticateOAuth(
         )
         val jwtToken = tokenService.issue(userId, OAuth2Provider.FACEBOOK)
 
-        return RedirectView("http://localhost:3000?data=${createResponse(jwtToken, userId)}")
+        return RedirectView("https://api.do-doodle.com?data=${createResponse(jwtToken, userId)}")
     }
 
     @Operation(summary = "Kakao OAuth 콜백", description = "Kakao OAuth 인증 콜백을 처리합니다")
