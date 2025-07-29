@@ -44,7 +44,7 @@ class AuthenticateOAuth(
         )
         val jwtToken = tokenService.issue(userId, OAuth2Provider.FACEBOOK)
 
-        return RedirectView("https://api.do-doodle.com?data=${createResponse(jwtToken, userId)}")
+        return RedirectView("https://do-doodle.com/facebook/redirect?data=${createResponse(jwtToken, userId)}")
     }
 
     @Operation(summary = "Kakao OAuth 콜백", description = "Kakao OAuth 인증 콜백을 처리합니다")
