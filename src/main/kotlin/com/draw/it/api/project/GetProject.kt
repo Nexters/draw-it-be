@@ -1,5 +1,7 @@
 package com.draw.it.api.project
 
+import com.draw.it.api.doodle.domain.Doodle
+import com.draw.it.api.doodle.domain.DoodleRepository
 import com.draw.it.api.project.domain.Project
 import com.draw.it.api.project.domain.ProjectRepository
 import io.swagger.v3.oas.annotations.Operation
@@ -17,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/project")
 class GetProject(
-    private val projectRepository: ProjectRepository
+    private val projectRepository: ProjectRepository,
+    private val doodleRepository: DoodleRepository
 ) {
 
     @Operation(summary = "프로젝트 조회", description = "UUID로 프로젝트를 조회합니다")
@@ -42,6 +45,7 @@ class GetProject(
     }
 
     private fun Project.toResponse(): GetProjectResponse {
+        val doodles = doodleRepository.findByProjectId(this.id!!)
         return GetProjectResponse(
             id = this.id!!,
             userId = this.userId,
@@ -51,7 +55,8 @@ class GetProject(
             uuid = this.uuid,
             editorCoordinationState = this.editorCoordinationState,
             createdAt = this.createdAt,
-            updatedAt = this.updatedAt
+            updatedAt = this.updatedAt,
+            doodleList = doodles.map { it.toResponse() }
         )
     }
 }
@@ -65,5 +70,30 @@ data class GetProjectResponse(
     val uuid: String,
     val editorCoordinationState: String?,
     val createdAt: java.time.LocalDateTime?,
+    val updatedAt: java.time.LocalDateTime?,
+    val doodleList: List<DoodleResponse>
+)
+
+data class DoodleResponse(
+    val id: Long,
+    val projectId: Long,
+    val nickname: String,
+    val letter: String?,
+    val imageUrl: String,
+    val isNewDoodleConfirmed: Boolean,
+    val createdAt: java.time.LocalDateTime?,
     val updatedAt: java.time.LocalDateTime?
 )
+
+private fun Doodle.toResponse(): DoodleResponse {
+    return DoodleResponse(
+        id = this.id!!,
+        projectId = this.projectId,
+        nickname = this.nickname,
+        letter = this.letter,
+        imageUrl = this.imageUrl,
+        isNewDoodleConfirmed = this.isNewDoodleConfirmed,
+        createdAt = this.createdAt,
+        updatedAt = this.updatedAt
+    )
+}
