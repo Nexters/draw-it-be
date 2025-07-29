@@ -21,6 +21,10 @@ class ProjectRepositoryImpl(
         return projectJpaRepository.findByUuid(uuid)
     }
 
+    override fun findAllByUserId(userId: Long): List<Project> {
+        return projectJpaRepository.findAllByUserId(userId)
+    }
+
     override fun delete(project: Project) {
         projectJpaRepository.delete(project)
     }
