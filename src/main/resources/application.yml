@@ -4,7 +4,9 @@ spring:
   docker:
     compose:
       enabled: false
-
+  servlet:
+    multipart:
+      max-file-size: 10MB
 server:
   shutdown: graceful
 
