@@ -20,8 +20,8 @@ springdoc:
 oauth:
   facebook:
     client-id: 1279366430568673
-    client-secret: 2039be12ac7063f0f1022e2f47b32b25
-    callback-uri: https://15e803cbb295.ngrok-free.app/api/auth/facebook/callback
+    client-secret: ${FACEBOOK_OAUTH_SECRET}
+    callback-uri: https://api.do-doodle.com/auth/facebook/callback
   kakao:
     client-id: FIXME
     callback-uri: FIXME
