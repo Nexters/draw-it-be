@@ -2,7 +2,6 @@ package com.draw.it.api.auth
 
 import com.draw.it.api.user.CreateUser
 import com.draw.it.api.user.domain.OAuth2Provider
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
@@ -10,13 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.servlet.view.RedirectView
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import org.springframework.web.bind.annotation.*
 
 @Tag(name = "Auth", description = "OAuth 인증 API")
 @RestController
@@ -25,7 +18,6 @@ class AuthenticateOAuth(
     private val facebookAuthClient: FacebookAuthClient,
     private val kakaoAuthClient: KakaoAuthClient,
     private val createUser: CreateUser,
-    private val objectMapper: ObjectMapper,
     private val tokenService: TokenService,
 ) {
 
@@ -33,7 +25,7 @@ class AuthenticateOAuth(
     @GetMapping("/facebook/callback")
     fun handleFacebookCallback(
         @Parameter(description = "Facebook OAuth 코드", required = true) @RequestParam code: String,
-    ): RedirectView {
+    ): AuthTokenResponse {
         val accessToken = facebookAuthClient.exchangeCodeForToken(code)
         val userInfo = facebookAuthClient.getUserInfo(accessToken)
 
@@ -42,9 +34,15 @@ class AuthenticateOAuth(
             provider = OAuth2Provider.FACEBOOK,
             providerId = userInfo.id
         )
-        val jwtToken = tokenService.issue(userId, OAuth2Provider.FACEBOOK)
+        val tokenPair = tokenService.issue(userId, OAuth2Provider.FACEBOOK)
 
-        return RedirectView("https://do-doodle.com/facebook/redirect?data=${createResponse(jwtToken, userId)}")
+        return AuthTokenResponse(
+            accessToken = tokenPair.accessToken,
+            refreshToken = tokenPair.refreshToken,
+            accessTokenExpiresAt = tokenPair.accessTokenExpiresAt,
+            refreshTokenExpiresAt = tokenPair.refreshTokenExpiresAt,
+            userId = userId
+        )
     }
 
     @Operation(summary = "Kakao OAuth 콜백", description = "Kakao OAuth 인증 콜백을 처리합니다")
@@ -70,27 +68,57 @@ class AuthenticateOAuth(
             provider = OAuth2Provider.KAKAO,
             providerId = userInfo.id
         )
-        val jwtToken = tokenService.issue(userId, OAuth2Provider.KAKAO)
+        val tokenPair = tokenService.issue(userId, OAuth2Provider.KAKAO)
 
         return AuthTokenResponse(
-            token = jwtToken,
+            accessToken = tokenPair.accessToken,
+            refreshToken = tokenPair.refreshToken,
+            accessTokenExpiresAt = tokenPair.accessTokenExpiresAt,
+            refreshTokenExpiresAt = tokenPair.refreshTokenExpiresAt,
             userId = userId
         )
     }
 
-    private fun createResponse(jwtToken: String, userId: Long): String? {
-        val data = mapOf(
-            "success" to true,
-            "token" to jwtToken,
-            "userId" to userId,
+    @Operation(summary = "토큰 갱신", description = "액세스 토큰과 리프레시 토큰을 사용하여 새로운 토큰 쌍을 발급받습니다")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "토큰 갱신 성공",
+                content = [Content(schema = Schema(implementation = AuthTokenResponse::class))]
+            ),
+            ApiResponse(responseCode = "401", description = "유효하지 않은 토큰")
+        ]
+    )
+    @PostMapping("/refresh")
+    fun refreshTokens(
+        @RequestBody request: RefreshTokenRequest
+    ): AuthTokenResponse {
+        val tokenPair = tokenService.refreshTokens(request.accessToken, request.refreshToken)
+            ?: throw IllegalArgumentException("Invalid token pair")
+
+        val userId = tokenService.validateAndGetUserId(tokenPair.accessToken)
+            ?: throw IllegalArgumentException("Invalid access token")
+
+        return AuthTokenResponse(
+            accessToken = tokenPair.accessToken,
+            refreshToken = tokenPair.refreshToken,
+            accessTokenExpiresAt = tokenPair.accessTokenExpiresAt,
+            refreshTokenExpiresAt = tokenPair.refreshTokenExpiresAt,
+            userId = userId
         )
-        val jsonString = objectMapper.writeValueAsString(data)
-        val encodedData = URLEncoder.encode(jsonString, StandardCharsets.UTF_8)
-        return encodedData
     }
 
+    data class RefreshTokenRequest(
+        val accessToken: String,
+        val refreshToken: String
+    )
+
     data class AuthTokenResponse(
-        val token: String,
+        val accessToken: String,
+        val refreshToken: String,
+        val accessTokenExpiresAt: Long,
+        val refreshTokenExpiresAt: Long,
         val userId: Long,
     )
 }
