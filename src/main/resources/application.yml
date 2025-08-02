@@ -21,7 +21,7 @@ oauth:
   facebook:
     client-id: 1279366430568673
     client-secret: ${FACEBOOK_OAUTH_SECRET}
-    callback-uri: https://api.do-doodle.com/auth/facebook/callback
+    callback-uri: ${FACEBOOK_OAUTH_CALLBACK_URI}
   kakao:
     client-id: ${KAKAO_OAUTH_CLIENT_ID}
     callback-uri: ${KAKAO_OAUTH_CALLBACK_URI}
