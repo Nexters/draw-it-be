@@ -1,6 +1,7 @@
 package com.draw.it.api.user
 
 import com.draw.it.api.user.domain.UserRepository
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PutMapping
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
 
+@Tag(name = "User", description = "사용자 관리 API")
 @Transactional
 @RestController
 @RequestMapping("/user")

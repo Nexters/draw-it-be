@@ -7,6 +7,7 @@ import com.draw.it.api.doodle.domain.DoodleRepository
 import com.draw.it.api.doodle.service.ImageStorageService
 import com.draw.it.api.project.domain.ProjectRepository
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
+@Tag(name = "Doodle", description = "두들 API")
 @RestController
 @RequestMapping("/anonymous/project/{projectId}/doodle")
 class CreateDoodle(

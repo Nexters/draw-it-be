@@ -2,12 +2,14 @@ package com.draw.it.api.project
 
 import com.draw.it.api.project.domain.Project
 import com.draw.it.api.project.domain.ProjectRepository
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Tag(name = "Project", description = "프로젝트 관리 API")
 @RestController
 @RequestMapping("/project")
 class CreateProject(

@@ -5,12 +5,14 @@ import com.draw.it.api.common.exception.ErrorCode
 import com.draw.it.api.doodle.domain.DoodleRepository
 import com.draw.it.api.project.domain.ProjectRepository
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Tag(name = "Doodle", description = "두들 API")
 @RestController
 @RequestMapping("/project/{projectId}/doodle")
 class DeleteDoodle(
