@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository
 
 interface TokenPairJpaRepository : JpaRepository<TokenPair, Long> {
     fun findByAccessTokenAndRefreshToken(accessToken: String, refreshToken: String): TokenPair?
+    fun findByAccessToken(accessToken: String): TokenPair?
     fun findByUserId(userId: Long): TokenPair?
     fun deleteByUserId(userId: Long)
-    fun deleteByAccessToken(accessToken: String)
 }
 
 @Repository
@@ -25,6 +25,10 @@ class JpaTokenPairRepositoryAdapter(
         return jpaRepository.findByAccessTokenAndRefreshToken(accessToken, refreshToken)
     }
 
+    override fun findByAccessToken(accessToken: String): TokenPair? {
+        return jpaRepository.findByAccessToken(accessToken)
+    }
+
     override fun findByUserId(userId: Long): TokenPair? {
         return jpaRepository.findByUserId(userId)
     }
@@ -33,7 +37,7 @@ class JpaTokenPairRepositoryAdapter(
         jpaRepository.deleteByUserId(userId)
     }
 
-    override fun deleteByAccessToken(accessToken: String) {
-        jpaRepository.deleteByAccessToken(accessToken)
+    override fun flush() {
+        jpaRepository.flush()
     }
 }

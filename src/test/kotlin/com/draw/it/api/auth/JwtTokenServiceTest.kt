@@ -24,7 +24,7 @@ class JwtTokenServiceTest {
 
         // then
         assertNotNull(token)
-        val extractedUserId = tokenService.validateAndGetUserId(token)
+        val extractedUserId = tokenService.validateAndGetUserId(token.accessToken)
         assertEquals(userId, extractedUserId)
         println("token = ${token}")
     }

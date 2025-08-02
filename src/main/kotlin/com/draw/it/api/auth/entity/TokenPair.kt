@@ -2,7 +2,6 @@ package com.draw.it.api.auth.entity
 
 import com.draw.it.api.common.entity.BaseEntity
 import jakarta.persistence.*
-import java.time.LocalDateTime
 
 @Entity
 @Table(
@@ -24,10 +23,4 @@ class TokenPair(
 
     @Column(name = "refresh_token", nullable = false, length = 1000)
     val refreshToken: String,
-
-    @Column(name = "access_token_expires_at", nullable = false)
-    val accessTokenExpiresAt: LocalDateTime,
-
-    @Column(name = "refresh_token_expires_at", nullable = false)
-    val refreshTokenExpiresAt: LocalDateTime,
 ) : BaseEntity()

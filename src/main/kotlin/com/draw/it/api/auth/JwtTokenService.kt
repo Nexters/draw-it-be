@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.*
 import javax.crypto.SecretKey
@@ -37,18 +35,17 @@ class JwtTokenService(
         
         val accessTokenExpiresAt = Instant.now().plus(accessTokenExpiration, ChronoUnit.SECONDS)
         val refreshTokenExpiresAt = Instant.now().plus(refreshTokenExpiration, ChronoUnit.SECONDS)
-        
+
         val tokenPair = TokenPair(
             userId = userId,
             accessToken = accessToken,
-            refreshToken = refreshToken,
-            accessTokenExpiresAt = LocalDateTime.ofInstant(accessTokenExpiresAt, ZoneId.systemDefault()),
-            refreshTokenExpiresAt = LocalDateTime.ofInstant(refreshTokenExpiresAt, ZoneId.systemDefault())
+            refreshToken = refreshToken
         )
-        
+
         tokenPairRepository.deleteByUserId(userId)
+        tokenPairRepository.flush()
         tokenPairRepository.save(tokenPair)
-        
+
         return TokenPairDto(
             accessToken = accessToken,
             refreshToken = refreshToken,
@@ -64,10 +61,8 @@ class JwtTokenService(
     }
 
     override fun refreshTokens(accessToken: String, refreshToken: String): TokenPairDto? {
-        val tokenPair = tokenPairRepository.findByAccessTokenAndRefreshToken(accessToken, refreshToken)
-            ?: return null
-            
-        if (tokenPair.refreshTokenExpiresAt.isBefore(LocalDateTime.now())) {
+        val tokenPair = tokenPairRepository.findByAccessToken(accessToken) ?: return null
+        if (tokenPair.refreshToken != refreshToken) {
             return null
         }
 
@@ -112,7 +107,7 @@ class JwtTokenService(
                 .build()
                 .parseSignedClaims(token)
             true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
@@ -125,7 +120,7 @@ class JwtTokenService(
                 .parseSignedClaims(token)
                 .payload
             claims.subject.toLong()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
@@ -138,7 +133,7 @@ class JwtTokenService(
                 .parseSignedClaims(token)
                 .payload
             OAuth2Provider.valueOf(claims["provider"] as String)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
@@ -151,7 +146,7 @@ class JwtTokenService(
                 .parseSignedClaims(token)
                 .payload
             claims.expiration.before(Date())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             true
         }
     }

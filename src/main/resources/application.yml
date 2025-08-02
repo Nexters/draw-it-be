@@ -23,13 +23,13 @@ oauth:
     client-secret: ${FACEBOOK_OAUTH_SECRET}
     callback-uri: https://api.do-doodle.com/auth/facebook/callback
   kakao:
-    client-id: FIXME
-    callback-uri: FIXME
+    client-id: ${KAKAO_OAUTH_CLIENT_ID}
+    callback-uri: ${KAKAO_OAUTH_CALLBACK_URI}
 
 aws:
   s3:
-    access-key: FIXME
-    secret-key: FIXME
+    access-key: ${AWS_S3_ACCESS_KEY}
+    secret-key: ${AWS_S3_SECRET_KEY}
     region: kr-standard
     bucket-name: dodoodle
     endpoint: https://kr.object.ncloudstorage.com
