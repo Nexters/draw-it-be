@@ -16,6 +16,9 @@ class FacebookAuthClient(
 ) {
 
     fun exchangeCodeForToken(code: String): String {
+        println("appId = ${appId}")
+        println("appSecret = ${appSecret}")
+        println("callbackUrl = ${callbackUrl}")
         val tokenUrl = "https://graph.facebook.com/v18.0/oauth/access_token"
         val params = mapOf(
             "client_id" to appId,
