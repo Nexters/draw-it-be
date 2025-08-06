@@ -20,8 +20,8 @@ spring:
 
 biz:
   notification-channel:
-    error-message: https://discord.com/api/webhooks/1391033359358234734/DiF2dBjekTaOVhf8PQuB9dK3Dxyps5dtmtHgo_XuqaBb4Ls1N45raYoG-CYCA_SvA61H
-    etc-message: https://discord.com/api/webhooks/1391033359358234734/DiF2dBjekTaOVhf8PQuB9dK3Dxyps5dtmtHgo_XuqaBb4Ls1N45raYoG-CYCA_SvA61H
+    error-message: ${NOTIFICATION_CHANNEL}
+    etc-message: ${NOTIFICATION_CHANNEL}
 
 aws:
   s3:
