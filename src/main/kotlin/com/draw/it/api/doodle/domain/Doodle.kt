@@ -1,12 +1,7 @@
 package com.draw.it.api.doodle.domain
 
 import com.draw.it.api.common.entity.BaseEntity
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
@@ -40,7 +35,7 @@ class Doodle(
 
     @Comment("사용자 확인 여부")
     @Column(name = "is_new_doodle_confirmed", nullable = false)
-    val isNewDoodleConfirmed: Boolean = false,
+    var isNewDoodleConfirmed: Boolean = false,
 
     @Comment("두들 삭제 여부")
     @Column(name = "is_deleted", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
@@ -49,5 +44,9 @@ class Doodle(
 
     fun delete() {
         this.isDeleted = true
+    }
+
+    fun confirmDoodle() {
+        this.isNewDoodleConfirmed = true
     }
 }
