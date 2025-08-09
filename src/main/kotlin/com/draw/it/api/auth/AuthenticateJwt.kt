@@ -25,25 +25,37 @@ class AuthenticateJwt(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
+        if (isPublicPath(request.requestURI)) {
+            filterChain.doFilter(request, response)
+            return
+        }
+
         val authorizationHeader = request.getHeader(AUTHORIZATION_HEADER)
 
-        authorizationHeader?.let { header ->
-            if (header.startsWith(BEARER_PREFIX)) {
-                val token = header.substring(TOKEN_PREFIX_LENGTH)
-                authenticateUser(token, request)
-            }
+        if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization header is missing or invalid")
+            return
+        }
+
+        val token = authorizationHeader.substring(TOKEN_PREFIX_LENGTH)
+        val userId = jwtTokenService.validateAndGetUserId(token)
+
+        if (userId == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is invalid or expired")
+            return
+        }
+
+        if (!isAlreadyAuthenticated()) {
+            val authentication = createAuthentication(userId, request)
+            SecurityContextHolder.getContext().authentication = authentication
         }
 
         filterChain.doFilter(request, response)
     }
 
-    private fun authenticateUser(token: String, request: HttpServletRequest) {
-        val userId = jwtTokenService.validateAndGetUserId(token)
-
-        if (userId != null && !isAlreadyAuthenticated()) {
-            val authentication = createAuthentication(userId, request)
-            SecurityContextHolder.getContext().authentication = authentication
-        }
+    private fun isPublicPath(uri: String): Boolean {
+        val publicPaths = listOf("/auth/", "/anonymous/", "/api-docs/", "/docs/", "/swagger-ui/", "/health")
+        return publicPaths.any { uri.startsWith(it) }
     }
 
     private fun isAlreadyAuthenticated(): Boolean {
