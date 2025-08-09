@@ -30,7 +30,7 @@ class WithdrawUserTest {
         sut.withdrawUser(userId)
 
         Assertions.assertThrows(NoSuchElementException::class.java) {
-            getUser.getUserById(userId)
+            getUser.getUser(userId)
         }
     }
 }

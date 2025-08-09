@@ -24,7 +24,7 @@ class CreateUserTest {
             providerId = "12345"
         )
 
-        val savedUser = getUser.getUserById(createdUserId)
+        val savedUser = getUser.getUser(createdUserId)
         Approvals.verify(savedUser)
     }
 

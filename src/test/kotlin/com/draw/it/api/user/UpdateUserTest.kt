@@ -35,7 +35,7 @@ class UpdateUserTest {
 
         sut.updateUser(userId, request)
 
-        val updatedUser = getUser.getUserById(userId)
+        val updatedUser = getUser.getUser(userId)
         assertEquals("김철수", updatedUser?.name)
         assertEquals(LocalDate.of(1990, 5, 15), updatedUser?.birthDate)
     }
@@ -55,7 +55,7 @@ class UpdateUserTest {
 
         sut.updateUser(userId, request)
 
-        val updatedUser = getUser.getUserById(userId)
+        val updatedUser = getUser.getUser(userId)
         assertEquals("홍길동", updatedUser?.name)
         assertEquals(null, updatedUser?.birthDate)
     }
