@@ -32,7 +32,14 @@ class SecurityConfig(
                 auth
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/anonymous/**").permitAll()
-                    .requestMatchers("/api-docs/**", "/docs/**", "/swagger-ui/**", "/health").permitAll()
+                    .requestMatchers(
+                        "/api-docs/**",
+                        "/docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**",
+                        "/health"
+                    ).permitAll()
                     .anyRequest().authenticated()
             }
             .exceptionHandling { exceptions ->
