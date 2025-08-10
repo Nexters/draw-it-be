@@ -83,7 +83,7 @@ class GlobalExceptionHandler(
     /**
      * Biz 예외
      */
-    @ExceptionHandler(BizException::class) // TODO 왜 이거 안잡히나 체크
+    @ExceptionHandler(BizException::class)
     fun handleBizException(e: BizException, request: HttpServletRequest): ResponseEntity<DefaultResponse> {
         val errorMessage = e.alertMessage(e.errorCode.code, e.log)
 
