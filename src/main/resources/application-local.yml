@@ -34,18 +34,18 @@ biz:
 
 oauth:
   facebook:
-    client-id: 123
-    client-secret: 123
-    callback-uri: FIXME
+    client-id: 1279366430568673
+    client-secret: ${FACEBOOK_OAUTH_SECRET}
+    callback-uri: ${FACEBOOK_OAUTH_CALLBACK_URI}
   kakao:
-    client-id: 123
-    callback-uri: FIXME
+    client-id: ${KAKAO_OAUTH_CLIENT_ID}
+    callback-uri: ${KAKAO_OAUTH_CALLBACK_URI}
 
 aws:
   s3:
-    access-key: FIXME
-    secret-key: FIXME
-    region: FIXME
-    bucket-name: FIXME
-    endpoint: FIXME
-    phase: FIXME
+    access-key: ${AWS_S3_ACCESS_KEY}
+    secret-key: ${AWS_S3_SECRET_KEY}
+    region: kr-standard
+    bucket-name: dodoodle
+    endpoint: https://kr.object.ncloudstorage.com
+    phase: local
