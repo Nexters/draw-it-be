@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*
 class AuthenticateOAuth(
     private val facebookAuthClient: FacebookAuthClient,
     private val kakaoAuthClient: KakaoAuthClient,
+    private val googleAuthClient: GoogleAuthClient,
     private val createUser: CreateUser,
     private val tokenService: TokenService,
 ) {
@@ -69,6 +70,40 @@ class AuthenticateOAuth(
             providerId = userInfo.id
         )
         val tokenPair = tokenService.issue(userId, OAuth2Provider.KAKAO)
+
+        return AuthTokenResponse(
+            accessToken = tokenPair.accessToken,
+            refreshToken = tokenPair.refreshToken,
+            accessTokenExpiresAt = tokenPair.accessTokenExpiresAt,
+            refreshTokenExpiresAt = tokenPair.refreshTokenExpiresAt,
+            userId = userId
+        )
+    }
+
+    @Operation(summary = "Google OAuth 콜백", description = "Google OAuth 인증 콜백을 처리합니다")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "인증 성공",
+                content = [Content(schema = Schema(implementation = AuthTokenResponse::class))]
+            ),
+            ApiResponse(responseCode = "400", description = "인증 실패")
+        ]
+    )
+    @GetMapping("/google/callback")
+    fun handleGoogleCallback(
+        @Parameter(description = "Google OAuth 코드", required = true) @RequestParam code: String,
+    ): AuthTokenResponse {
+        val accessToken = googleAuthClient.exchangeCodeForToken(code)
+        val userInfo = googleAuthClient.getUserInfo(accessToken)
+
+        val userId = createUser.getOrCreateUser(
+            name = userInfo.name,
+            provider = OAuth2Provider.GOOGLE,
+            providerId = userInfo.id
+        )
+        val tokenPair = tokenService.issue(userId, OAuth2Provider.GOOGLE)
 
         return AuthTokenResponse(
             accessToken = tokenPair.accessToken,
