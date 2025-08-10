@@ -38,14 +38,12 @@ oauth:
     client-secret: ${FACEBOOK_OAUTH_SECRET}
     callback-uri: ${FACEBOOK_OAUTH_CALLBACK_URI}
   kakao:
-    client-id: 123
-    callback-uri: FIXME
     client-id: ${KAKAO_OAUTH_CLIENT_ID}
     callback-uri: ${KAKAO_OAUTH_CALLBACK_URI}
   google:
-    client-id: 123
-    client-secret: FIXME
-    callback-uri: FIXME
+    client-id: 347462869678-64lpta6r7ofjngb8ve3ar8harhb7dqau.apps.googleusercontent.com
+    client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
+    callback-uri: ${GOOGLE_OAUTH_CALLBACK_URI}
 
 aws:
   s3:
