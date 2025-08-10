@@ -21,7 +21,7 @@ springdoc:
 
 oauth:
   facebook:
-    client-id: 1279366430568673
+    client-id: ${FACEBOOK_OAUTH_CLIENT_ID}
     client-secret: ${FACEBOOK_OAUTH_SECRET}
     callback-uri: ${FACEBOOK_OAUTH_CALLBACK_URI}
   kakao:
