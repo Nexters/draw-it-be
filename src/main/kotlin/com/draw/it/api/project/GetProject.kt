@@ -40,6 +40,15 @@ class GetProject(
         return projects.map { it.toResponse() }
     }
 
+    @Operation(summary = "내 프로젝트 개수 조회", description = "현재 인증된 사용자의 전체 프로젝트 개수를 조회합니다")
+    @GetMapping("/my/count")
+    fun getMyProjectCount(
+        @AuthenticationPrincipal userId: Long
+    ): GetProjectCountResponse {
+        val count = projectRepository.countByUserId(userId)
+        return GetProjectCountResponse(count)
+    }
+
     private fun Project.toResponse(): GetProjectResponse {
         val doodles = doodleRepository.findByProjectId(this.id!!)
         return GetProjectResponse(
@@ -79,6 +88,10 @@ data class DoodleResponse(
     val isNewDoodleConfirmed: Boolean,
     val createdAt: java.time.LocalDateTime?,
     val updatedAt: java.time.LocalDateTime?
+)
+
+data class GetProjectCountResponse(
+    val count: Long
 )
 
 private fun Doodle.toResponse(): DoodleResponse {

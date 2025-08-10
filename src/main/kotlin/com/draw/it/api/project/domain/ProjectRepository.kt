@@ -5,5 +5,6 @@ interface ProjectRepository {
     fun findById(id: Long): Project?
     fun findByUuid(uuid: String): Project?
     fun findAllByUserId(userId: Long): List<Project>
+    fun countByUserId(userId: Long): Long
     fun delete(project: Project)
 }

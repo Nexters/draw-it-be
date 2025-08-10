@@ -25,6 +25,10 @@ class ProjectRepositoryImpl(
         return projectJpaRepository.findAllByUserId(userId)
     }
 
+    override fun countByUserId(userId: Long): Long {
+        return projectJpaRepository.countByUserId(userId)
+    }
+
     override fun delete(project: Project) {
         projectJpaRepository.delete(project)
     }

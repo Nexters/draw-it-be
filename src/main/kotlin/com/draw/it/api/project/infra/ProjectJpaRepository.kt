@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 interface ProjectJpaRepository : JpaRepository<Project, Long> {
     fun findByUuid(uuid: String): Project?
     fun findAllByUserId(userId: Long): List<Project>
+    fun countByUserId(userId: Long): Long
 }
