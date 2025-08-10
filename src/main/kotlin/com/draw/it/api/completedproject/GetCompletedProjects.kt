@@ -21,12 +21,13 @@ class GetCompletedProjects(
     fun getCompletedProjects(
         @AuthenticationPrincipal userId: Long
     ): List<CompletedProjectResponse> {
-        val completedProjects = completedProjectRepository.findByUserId(userId)
-        val responses = completedProjects.map { completedProject ->
+        val completedProjectsWithName = completedProjectRepository.findWithProjectNameByUserId(userId)
+        val responses = completedProjectsWithName.map { completedProjectWithName ->
             CompletedProjectResponse(
-                projectId = completedProject.projectId,
-                createdAt = completedProject.createdAt ?: throw IllegalStateException("CreatedAt cannot be null"),
-                imageUrl = completedProject.imageUrl
+                projectId = completedProjectWithName.projectId,
+                projectName = completedProjectWithName.projectName,
+                createdAt = completedProjectWithName.createdAt,
+                imageUrl = completedProjectWithName.imageUrl
             )
         }
         
@@ -36,6 +37,7 @@ class GetCompletedProjects(
 
 data class CompletedProjectResponse(
     val projectId: Long,
+    val projectName: String,
     val createdAt: LocalDateTime,
     val imageUrl: String
 )
