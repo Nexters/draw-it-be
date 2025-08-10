@@ -27,6 +27,10 @@ oauth:
   kakao:
     client-id: ${KAKAO_OAUTH_CLIENT_ID}
     callback-uri: ${KAKAO_OAUTH_CALLBACK_URI}
+  google:
+    client-id: ${GOOGLE_OAUTH_CLIENT_ID}
+    client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
+    callback-uri: ${GOOGLE_OAUTH_CALLBACK_URI}
 
 aws:
   s3:

@@ -40,6 +40,10 @@ oauth:
   kakao:
     client-id: 123
     callback-uri: FIXME
+  google:
+    client-id: 123
+    client-secret: FIXME
+    callback-uri: FIXME
 
 aws:
   s3:
