@@ -20,7 +20,7 @@ class GetProject(
     private val doodleRepository: DoodleRepository
 ) {
 
-    @Operation(summary = "프로젝트 조회", description = "프로젝트를 조회합니다")
+    @Operation(summary = "내 프로젝트 상세 조회", description = "프로젝트를 조회합니다")
     @GetMapping("/{projectId}")
     fun getProjectByUuid(
         @PathVariable proejectId: Long

@@ -17,7 +17,7 @@ class GetProjectByPublic(
     private val projectRepository: ProjectRepository,
     private val getBasicUserInfo: GetBasicUserInfo
 ) {
-    @Operation(summary = "프로젝트 조회", description = "게스트 유저가 UUID로 프로젝트를 조회합니다")
+    @Operation(summary = "게스트 프로젝트 조회", description = "게스트 유저가 UUID로 프로젝트를 조회합니다")
     @GetMapping("/{uuid}")
     fun getProjectByUuid(
         @PathVariable uuid: String
