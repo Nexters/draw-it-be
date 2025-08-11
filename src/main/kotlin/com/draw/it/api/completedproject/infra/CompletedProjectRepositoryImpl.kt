@@ -14,6 +14,10 @@ class CompletedProjectRepositoryImpl(
         return jpaRepository.save(completedProject)
     }
 
+    override fun findById(id: Long): CompletedProject? {
+        return jpaRepository.findById(id).orElse(null)
+    }
+
     override fun findByUserId(userId: Long): List<CompletedProject> {
         return jpaRepository.findByUserId(userId)
     }
