@@ -53,3 +53,7 @@ aws:
     bucket-name: FIXME
     endpoint: FIXME
     phase: FIXME
+
+llm:
+  openai:
+    api-key: FIXME

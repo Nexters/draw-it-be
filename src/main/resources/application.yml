@@ -39,3 +39,7 @@ aws:
     region: kr-standard
     bucket-name: dodoodle
     endpoint: https://kr.object.ncloudstorage.com
+
+llm:
+  openai:
+    api-key: ${OPENAI_API_KEY}
