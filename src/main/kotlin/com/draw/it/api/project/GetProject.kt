@@ -20,13 +20,13 @@ class GetProject(
     private val doodleRepository: DoodleRepository
 ) {
 
-    @Operation(summary = "프로젝트 조회", description = "UUID로 프로젝트를 조회합니다")
-    @GetMapping("/{uuid}")
+    @Operation(summary = "프로젝트 조회", description = "프로젝트를 조회합니다")
+    @GetMapping("/{projectId}")
     fun getProjectByUuid(
-        @PathVariable uuid: String
+        @PathVariable proejectId: Long
     ): GetProjectResponse {
-        val project = projectRepository.findByUuid(uuid)
-            ?: throw RuntimeException("Project not found with uuid: $uuid")
+        val project = projectRepository.findById(proejectId)
+            ?: throw RuntimeException("Project not found with uuid: $proejectId")
 
         return project.toResponse()
     }

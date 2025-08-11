@@ -6,14 +6,14 @@ import com.draw.it.api.doodle.domain.DoodleRepository
 import com.draw.it.api.project.CreateProject
 import com.draw.it.api.project.CreateProjectRequest
 import com.draw.it.api.project.CreateProjectResponse
+import com.draw.it.common.IntegrationTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 
-@SpringBootTest
+@IntegrationTest
 @Transactional
 class ConfirmDoodleTest {
 
@@ -65,6 +65,6 @@ class ConfirmDoodleTest {
             confirmDoodle.confirmDoodle(nonExistentProjectId, nonExistentDoodleId)
         }
 
-        assertEquals("[404/잘못된 요청입니다] - 존재하지 않는 프로젝트입니다", exception.message)
+        assertEquals("[400/잘못된 요청입니다] - 존재하지 않는 프로젝트입니다", exception.message)
     }
 }

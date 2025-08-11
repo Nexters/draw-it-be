@@ -34,7 +34,7 @@ class DeleteProjectTest {
 
         // then
         assertThrows<RuntimeException> {
-            getProject.getProjectByUuid(createdProject.uuid)
+            getProject.getProjectByUuid(createdProject.id)
         }
     }
 }
