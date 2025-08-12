@@ -40,7 +40,8 @@ class GetUser(
             id = user.id!!,
             name = user.name,
             birthDate = user.birthDate,
-            provider = user.provider
+            provider = user.provider,
+            needsTutorial = user.needsTutorial
         )
     }
 
@@ -48,6 +49,7 @@ class GetUser(
         val id: Long,
         val name: String,
         val birthDate: LocalDate?,
-        val provider: OAuth2Provider
+        val provider: OAuth2Provider,
+        val needsTutorial: Boolean
     )
 }

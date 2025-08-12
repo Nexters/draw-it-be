@@ -29,5 +29,13 @@ class User(
 
     @Comment("OAuth 제공자별 고유 ID")
     @Column(name = "provider_id", nullable = false)
-    val providerId: String
-) : BaseEntity()
+    val providerId: String,
+
+    @Comment("튜토리얼 진행 필요 여부")
+    @Column(name = "needs_tutorial", nullable = false)
+    var needsTutorial: Boolean = true
+) : BaseEntity() {
+    fun completeTutorial() {
+        needsTutorial = false
+    }
+}
