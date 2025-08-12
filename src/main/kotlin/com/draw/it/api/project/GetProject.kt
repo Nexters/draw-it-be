@@ -21,12 +21,12 @@ class GetProject(
 ) {
 
     @Operation(summary = "내 프로젝트 상세 조회", description = "프로젝트를 조회합니다")
-    @GetMapping("/{projectId}")
+    @GetMapping("/{uuid}")
     fun getProjectByUuid(
-        @PathVariable proejectId: Long
+        @PathVariable uuid: String
     ): GetProjectResponse {
-        val project = projectRepository.findById(proejectId)
-            ?: throw RuntimeException("Project not found with uuid: $proejectId")
+        val project = projectRepository.findByUuid(uuid)
+            ?: throw RuntimeException("Project not found with uuid: $uuid")
 
         return project.toResponse()
     }
