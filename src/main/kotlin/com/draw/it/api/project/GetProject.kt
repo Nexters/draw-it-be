@@ -22,7 +22,7 @@ class GetProject(
 
     @Operation(summary = "내 프로젝트 상세 조회", description = "프로젝트를 조회합니다")
     @GetMapping("/{projectId}")
-    fun getProjectByUuid(
+    fun getProjectBy(
         @PathVariable proejectId: Long
     ): GetProjectResponse {
         val project = projectRepository.findById(proejectId)
