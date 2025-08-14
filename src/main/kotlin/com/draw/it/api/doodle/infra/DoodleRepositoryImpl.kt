@@ -13,6 +13,10 @@ class DoodleRepositoryImpl(
         return doodleJpaRepository.save(doodle)
     }
 
+    override fun saveAll(doodles: List<Doodle>): List<Doodle> {
+        return doodleJpaRepository.saveAll(doodles)
+    }
+
     override fun findById(id: Long): Doodle? {
         return doodleJpaRepository.findById(id).orElse(null)
     }

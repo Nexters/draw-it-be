@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDateTime
 
 @Tag(name = "Project", description = "프로젝트 관리 API")
 @RestController
@@ -27,8 +28,17 @@ class GetProject(
     ): GetProjectResponse {
         val project = projectRepository.findById(projectId)
             ?: throw RuntimeException("Project not found with uuid: $projectId")
-
-        return project.toResponse()
+        val doodles = getDoodlesByProjectId(projectId)
+        
+        // 프로젝트 조회 시 모든 doodles를 confirm 상태로 변경하여 저장
+        doodles.forEach { doodle ->
+            if (!doodle.isNewDoodleConfirmed) {
+                doodle.confirmDoodle()
+            }
+        }
+        doodleRepository.saveAll(doodles)
+        
+        return project.toResponse(doodles)
     }
 
     @Operation(summary = "내 프로젝트 목록 조회", description = "현재 인증된 사용자의 모든 프로젝트를 조회합니다")
@@ -49,8 +59,10 @@ class GetProject(
         return GetProjectCountResponse(count)
     }
 
-    private fun Project.toResponse(): GetProjectResponse {
-        val doodles = doodleRepository.findByProjectId(this.id!!)
+    private fun getDoodlesByProjectId(projectId: Long) = doodleRepository.findByProjectId(projectId)
+
+    private fun Project.toResponse(doodles: List<Doodle>? = null): GetProjectResponse {
+        val projectDoodles = doodles ?: getDoodlesByProjectId(this.id!!)
         return GetProjectResponse(
             id = this.id!!,
             userId = this.userId,
@@ -61,7 +73,9 @@ class GetProject(
             editorCoordinationState = this.editorCoordinationState,
             createdAt = this.createdAt,
             updatedAt = this.updatedAt,
-            doodleList = doodles.map { it.toResponse() }
+            doodleList = projectDoodles.map { it.toResponse() }.take(5),
+            isNewDoodleConfirmed = projectDoodles.any { it.isNewDoodleConfirmed },
+            doodleCount = projectDoodles.size.toLong()
         )
     }
 }
@@ -74,9 +88,11 @@ data class GetProjectResponse(
     val backgroundColor: String,
     val uuid: String,
     val editorCoordinationState: String?,
-    val createdAt: java.time.LocalDateTime?,
-    val updatedAt: java.time.LocalDateTime?,
-    val doodleList: List<DoodleResponse>
+    val createdAt: LocalDateTime?,
+    val updatedAt: LocalDateTime?,
+    val doodleList: List<DoodleResponse>,
+    val isNewDoodleConfirmed: Boolean,
+    val doodleCount: Long,
 )
 
 data class DoodleResponse(
@@ -86,8 +102,8 @@ data class DoodleResponse(
     val letter: String?,
     val imageUrl: String,
     val isNewDoodleConfirmed: Boolean,
-    val createdAt: java.time.LocalDateTime?,
-    val updatedAt: java.time.LocalDateTime?
+    val createdAt: LocalDateTime?,
+    val updatedAt: LocalDateTime?
 )
 
 data class GetProjectCountResponse(
