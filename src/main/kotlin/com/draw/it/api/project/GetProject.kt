@@ -38,7 +38,7 @@ class GetProject(
         }
         doodleRepository.saveAll(doodles)
         
-        return project.toResponse(doodles)
+        return project.toResponse(doodles, limitDoodles = false)
     }
 
     @Operation(summary = "내 프로젝트 목록 조회", description = "현재 인증된 사용자의 모든 프로젝트를 조회합니다")
@@ -61,8 +61,9 @@ class GetProject(
 
     private fun getDoodlesByProjectId(projectId: Long) = doodleRepository.findByProjectId(projectId)
 
-    private fun Project.toResponse(doodles: List<Doodle>? = null): GetProjectResponse {
+    private fun Project.toResponse(doodles: List<Doodle>? = null, limitDoodles: Boolean = true): GetProjectResponse {
         val projectDoodles = doodles ?: getDoodlesByProjectId(this.id!!)
+        val doodleResponses = projectDoodles.map { it.toResponse() }
         return GetProjectResponse(
             id = this.id!!,
             userId = this.userId,
@@ -73,7 +74,7 @@ class GetProject(
             editorCoordinationState = this.editorCoordinationState,
             createdAt = this.createdAt,
             updatedAt = this.updatedAt,
-            doodleList = projectDoodles.map { it.toResponse() }.take(5),
+            doodleList = if (limitDoodles) doodleResponses.take(5) else doodleResponses,
             isNewDoodleConfirmed = projectDoodles.any { it.isNewDoodleConfirmed },
             doodleCount = projectDoodles.size.toLong()
         )
