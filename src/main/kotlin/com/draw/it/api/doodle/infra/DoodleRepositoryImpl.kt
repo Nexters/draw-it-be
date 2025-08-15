@@ -21,6 +21,10 @@ class DoodleRepositoryImpl(
         return doodleJpaRepository.findById(id).orElse(null)
     }
 
+    override fun findByIdIn(ids: List<Long>): List<Doodle> {
+        return doodleJpaRepository.findByIdIn(ids)
+    }
+
     override fun findByProjectId(projectId: Long): List<Doodle> {
         return doodleJpaRepository.findByProjectId(projectId)
     }
