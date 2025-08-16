@@ -22,6 +22,7 @@ biz:
   notification-channel:
     error-message: ${NOTIFICATION_CHANNEL}
     etc-message: ${NOTIFICATION_CHANNEL}
+    metrics-message: ${METRICS_CHANNEL}
 
 aws:
   s3:

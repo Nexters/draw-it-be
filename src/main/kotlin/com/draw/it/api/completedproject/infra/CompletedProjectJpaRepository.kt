@@ -4,6 +4,7 @@ import com.draw.it.api.completedproject.domain.CompletedProject
 import com.draw.it.api.completedproject.domain.CompletedProjectWithName
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import java.time.LocalDateTime
 
 interface CompletedProjectJpaRepository : JpaRepository<CompletedProject, Long> {
     @Query("""
@@ -27,4 +28,6 @@ interface CompletedProjectJpaRepository : JpaRepository<CompletedProject, Long> 
         ORDER BY cp.createdAt DESC
     """)
     fun findWithProjectNameByUserId(userId: Long): List<CompletedProjectWithName>
+    
+    fun countByCreatedAtBetween(startDate: LocalDateTime, endDate: LocalDateTime): Long
 }

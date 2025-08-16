@@ -43,3 +43,9 @@ aws:
 llm:
   openai:
     api-key: ${OPENAI_API_KEY}
+
+biz:
+  notification-channel:
+    error-message: ${DISCORD_ERROR_WEBHOOK_URL}
+    etc-message: ${DISCORD_ETC_WEBHOOK_URL}
+    metrics-message: ${DISCORD_METRICS_WEBHOOK_URL}
