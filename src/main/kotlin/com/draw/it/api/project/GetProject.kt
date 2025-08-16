@@ -75,8 +75,9 @@ class GetProject(
             createdAt = this.createdAt,
             updatedAt = this.updatedAt,
             doodleList = if (limitDoodles) doodleResponses.take(5) else doodleResponses,
-            isNewDoodleConfirmed = projectDoodles.any { it.isNewDoodleConfirmed },
-            doodleCount = projectDoodles.size.toLong()
+            isNewDoodleConfirmed = projectDoodles.any { !it.isNewDoodleConfirmed },
+            doodleCount = projectDoodles.size.toLong(),
+            newDoodleCount = projectDoodles.filter { !it.isNewDoodleConfirmed }.size.toLong(),
         )
     }
 }
@@ -94,6 +95,7 @@ data class GetProjectResponse(
     val doodleList: List<DoodleResponse>,
     val isNewDoodleConfirmed: Boolean,
     val doodleCount: Long,
+    val newDoodleCount: Long,
 )
 
 data class DoodleResponse(
