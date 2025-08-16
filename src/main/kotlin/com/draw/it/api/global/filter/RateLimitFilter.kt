@@ -31,7 +31,6 @@ class RateLimitFilter(
         filterChain: FilterChain
     ) {
         val clientIp = getClientIpAddress(request)
-        log.info { "clientIp: $clientIp" }
         val bucket = resolveBucket(clientIp)
 
         if (bucket.tryConsume(1)) {
@@ -58,13 +57,11 @@ class RateLimitFilter(
     private fun getClientIpAddress(request: HttpServletRequest): String {
         val xForwardedForHeader = request.getHeader("X-Forwarded-For")
         if (!xForwardedForHeader.isNullOrBlank()) {
-            log.info { "xForwardedFor: $xForwardedForHeader" }
             return xForwardedForHeader.split(",")[0].trim()
         }
 
         val xRealIpHeader = request.getHeader("X-Real-IP")
         if (!xRealIpHeader.isNullOrBlank()) {
-            log.info { "xRealIp: $xRealIpHeader" }
             return xRealIpHeader.trim()
         }
 
