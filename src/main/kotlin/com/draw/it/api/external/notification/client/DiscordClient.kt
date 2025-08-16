@@ -44,13 +44,13 @@ class DiscordClient(
     }
 
     @Async(NOTIFICATION_EXECUTOR_NAME)
-    fun sendDailyMetrics(metrics: DailyMetrics) {
+    override fun sendDailyMetrics(metrics: DailyMetrics) {
         val numberFormat = NumberFormat.getNumberInstance(Locale.KOREA)
         
         val discordMessage = DiscordMessage(
             embeds = listOf(
                 DiscordEmbeddedMessage(
-                    title = "📊 Draw It 일일 통계 (${metrics.date})",
+                    title = "📊 Draw It 일일 통계 (${metrics.date.minusDays(1)})",
                     color = BizNotificationType.INFO.color,
                     fields = listOf(
                         DiscordEmbeddedField(
