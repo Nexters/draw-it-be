@@ -24,10 +24,16 @@ class GetProject(
     @Operation(summary = "내 프로젝트 상세 조회", description = "프로젝트를 조회합니다")
     @GetMapping("/{projectId}")
     fun getProjectBy(
-        @PathVariable projectId: Long
+        @PathVariable projectId: Long,
+        @AuthenticationPrincipal userId: Long
     ): GetProjectResponse {
         val project = projectRepository.findById(projectId)
             ?: throw RuntimeException("Project not found with uuid: $projectId")
+        
+        // 프로젝트 소유자 확인
+        if (project.userId != userId) {
+            throw RuntimeException("Access denied: You can only view your own projects")
+        }
         val doodles = getDoodlesByProjectId(projectId)
         
         // 프로젝트 조회 시 모든 doodles를 confirm 상태로 변경하여 저장
