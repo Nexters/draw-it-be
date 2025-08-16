@@ -21,6 +21,10 @@ class Doodle(
     @Column(name = "project_id", nullable = false)
     val projectId: Long,
 
+    @Comment("프로젝트 UUID")
+    @Column(name = "project_uuid", nullable = false)
+    val projectUuid: String,
+
     @Comment("두들 작성자 닉네임")
     @Column(name = "nickname", nullable = false)
     val nickname: String,

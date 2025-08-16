@@ -6,5 +6,6 @@ interface DoodleRepository {
     fun findById(id: Long): Doodle?
     fun findByIdIn(ids: List<Long>): List<Doodle>
     fun findByProjectId(projectId: Long): List<Doodle>
+    fun findByProjectUuid(projectUuid: String): List<Doodle>
     fun delete(doodle: Doodle)
 }

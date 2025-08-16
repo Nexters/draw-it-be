@@ -1,3 +1,90 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is a Spring Boot API for a drawing-based rolling paper service called "Draw It". Users can create rolling papers, share links for others to contribute drawings, and export the final composition as an image. The service supports OAuth authentication (Kakao, Facebook, Google) and AWS S3 for image storage.
+
+## Build Commands
+
+### Development
+- `./gradlew bootRun` - Run the application locally
+- `./gradlew test` - Run all tests
+- `./gradlew check` - Run all verification tasks (tests + static analysis)
+- `docker-compose up` - Start MySQL database for local development
+
+### Docker
+- `./gradlew jib` - Build and create Docker image using Jib
+- `docker-compose -f docker-compose-deploy.yml up` - Deploy with production configuration
+
+## Architecture
+
+### Vertical Slice Architecture
+- Each feature is organized as a vertical slice containing all layers
+- Controllers and event listeners are co-located with application logic
+- Repository interfaces are defined in domain layer with implementations in infrastructure layer
+- JpaRepository is not used directly as the repository interface
+
+### Module Structure
+```
+src/main/kotlin/com/draw/it/api/
+├── auth/           # JWT and OAuth authentication
+├── user/           # User management
+├── project/        # Rolling paper projects
+├── doodle/         # Drawing/doodle management
+├── completedproject/ # Generated realistic images
+├── common/         # Shared DTOs and exceptions
+├── global/         # Configuration and filters
+└── external/       # External service integrations
+```
+
+### Repository Pattern
+- Domain repositories are interfaces (e.g., `ProjectRepository`)
+- Infrastructure implementations use JPA repositories (e.g., `ProjectRepositoryImpl` uses `ProjectJpaRepository`)
+- Soft deletes are implemented using `@SQLDelete` and `@SQLRestriction`
+
+## Testing
+
+### Test Structure
+- Use `@IntegrationTest` annotation for application layer tests
+- Integration tests use real repository implementations (no mocking)
+- Test files include `.approved.txt` files for approval testing
+- Test data setup uses SQL files in `src/test/resources/`
+
+### Running Tests
+- `./gradlew test` - All tests
+- `./gradlew test --tests "ClassName"` - Specific test class
+- `./gradlew test --tests "ClassName.methodName"` - Specific test method
+
+## Code Guidelines
+
+### Kotlin Style
+- Use Kotlin idioms and data classes
+- Leverage companion objects for factory methods
+- Use extension functions where appropriate
+- Follow Kotlin naming conventions
+
+### Entity Design
+- All entities extend `BaseEntity` for audit fields
+- Use `@Comment` annotations for database documentation
+- Implement soft deletes with `@SQLDelete` and `@SQLRestriction`
+- Domain validation through entity methods (e.g., `validateOwnership`)
+
+### Development Workflow
+1. Read functional specification (`functional-specification.md`)
+2. Write integration tests using `@IntegrationTest`
+3. Implement minimal code to pass tests
+4. Follow TDD approach for each feature
+
+## Key Dependencies
+- Spring Boot 3.4.1 with Kotlin
+- Spring Security with JWT authentication
+- Spring Data JPA with MySQL
+- AWS SDK for S3 integration
+- SpringDoc OpenAPI for API documentation
+- MockK for testing
+
 ### 아키텍처
 1. Vertical Slice Architecture 형태로 개발한다
    - Controller, EventListener 등은 Application Layer 의 코드에 함꼐 작성된다

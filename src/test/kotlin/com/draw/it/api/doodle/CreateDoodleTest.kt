@@ -52,18 +52,19 @@ class CreateDoodleTest {
         val savedDoodle = Doodle(
             id = 1L,
             projectId = 1L,
+            projectUuid = "test-uuid",
             nickname = "테스트 닉네임",
             letter = "테스트 편지 내용",
             imageUrl = "https://example.com/mock-image-url/test-image.jpg"
         )
         
-        every { projectRepository.findById(1L) } returns project
+        every { projectRepository.findByUuid("test-uuid") } returns project
         every { imageStorageService.uploadImage(mockImage) } returns "https://example.com/mock-image-url/test-image.jpg"
         every { doodleRepository.save(any<Doodle>()) } returns savedDoodle
 
         // When
         val response = createDoodle.createDoodle(
-            projectId = 1L,
+            projectUuid = "test-uuid",
             nickname = "테스트 닉네임",
             letter = "테스트 편지 내용",
             image = mockImage
@@ -72,6 +73,7 @@ class CreateDoodleTest {
         // Then
         assertThat(response.id).isEqualTo(1L)
         assertThat(response.projectId).isEqualTo(1L)
+        assertThat(response.projectUuid).isEqualTo("test-uuid")
         assertThat(response.nickname).isEqualTo("테스트 닉네임")
         assertThat(response.letter).isEqualTo("테스트 편지 내용")
         assertThat(response.imageUrl).isEqualTo("https://example.com/mock-image-url/test-image.jpg")
@@ -100,18 +102,19 @@ class CreateDoodleTest {
         val savedDoodle = Doodle(
             id = 1L,
             projectId = 1L,
+            projectUuid = "test-uuid",
             nickname = "테스트 닉네임",
             letter = null,
             imageUrl = "https://example.com/mock-image-url/test-image.jpg"
         )
         
-        every { projectRepository.findById(1L) } returns project
+        every { projectRepository.findByUuid("test-uuid") } returns project
         every { imageStorageService.uploadImage(mockImage) } returns "https://example.com/mock-image-url/test-image.jpg"
         every { doodleRepository.save(any<Doodle>()) } returns savedDoodle
 
         // When
         val response = createDoodle.createDoodle(
-            projectId = 1L,
+            projectUuid = "test-uuid",
             nickname = "테스트 닉네임",
             letter = null,
             image = mockImage
@@ -120,6 +123,7 @@ class CreateDoodleTest {
         // Then
         assertThat(response.id).isEqualTo(1L)
         assertThat(response.projectId).isEqualTo(1L)
+        assertThat(response.projectUuid).isEqualTo("test-uuid")
         assertThat(response.nickname).isEqualTo("테스트 닉네임")
         assertThat(response.letter).isNull()
         assertThat(response.imageUrl).isEqualTo("https://example.com/mock-image-url/test-image.jpg")
@@ -136,12 +140,12 @@ class CreateDoodleTest {
             "test image content".toByteArray()
         )
         
-        every { projectRepository.findById(999L) } returns null
+        every { projectRepository.findByUuid("invalid-uuid") } returns null
 
         // When & Then
         assertThatThrownBy {
             createDoodle.createDoodle(
-                projectId = 999L,
+                projectUuid = "invalid-uuid",
                 nickname = "테스트 닉네임",
                 letter = "테스트 편지 내용",
                 image = mockImage

@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @Tag(name = "Doodle", description = "두들 API")
 @RestController
-@RequestMapping("/anonymous/project/{projectId}/doodle")
+@RequestMapping("/anonymous/project/{projectUuid}/doodle")
 class CreateDoodle(
     private val doodleRepository: DoodleRepository,
     private val projectRepository: ProjectRepository,
@@ -27,8 +27,8 @@ class CreateDoodle(
 
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun createDoodle(
-        @Parameter(description = "프로젝트 ID", required = true)
-        @PathVariable projectId: Long,
+        @Parameter(description = "프로젝트 UUID", required = true)
+        @PathVariable projectUuid: String,
         @Parameter(description = "작성자 닉네임", required = true)
         @RequestParam nickname: String,
         @Parameter(description = "편지 내용", required = false)
@@ -37,7 +37,7 @@ class CreateDoodle(
         @RequestParam image: MultipartFile
     ): CreateDoodleResponse {
         // 프로젝트 존재 여부 확인
-        projectRepository.findById(projectId)
+        val project = projectRepository.findByUuid(projectUuid)
             ?: throw BizException(ErrorCode.BAD_REQUEST, "존재하지 않는 프로젝트입니다")
 
         // 이미지 업로드
@@ -45,7 +45,8 @@ class CreateDoodle(
 
         // Doodle 생성 및 저장
         val doodle = Doodle(
-            projectId = projectId,
+            projectId = project.id!!,
+            projectUuid = projectUuid,
             nickname = nickname,
             letter = letter,
             imageUrl = imageUrl
@@ -60,6 +61,7 @@ class CreateDoodle(
 data class CreateDoodleResponse(
     val id: Long,
     val projectId: Long,
+    val projectUuid: String,
     val nickname: String,
     val letter: String?,
     val imageUrl: String,
@@ -71,6 +73,7 @@ data class CreateDoodleResponse(
             return CreateDoodleResponse(
                 id = doodle.id!!,
                 projectId = doodle.projectId,
+                projectUuid = doodle.projectUuid,
                 nickname = doodle.nickname,
                 letter = doodle.letter,
                 imageUrl = doodle.imageUrl,

@@ -101,6 +101,7 @@ data class GetProjectResponse(
 data class DoodleResponse(
     val id: Long,
     val projectId: Long,
+    val projectUuid: String,
     val nickname: String,
     val letter: String?,
     val imageUrl: String,
@@ -117,6 +118,7 @@ private fun Doodle.toResponse(): DoodleResponse {
     return DoodleResponse(
         id = this.id!!,
         projectId = this.projectId,
+        projectUuid = this.projectUuid,
         nickname = this.nickname,
         letter = this.letter,
         imageUrl = this.imageUrl,

@@ -33,6 +33,7 @@ class ConfirmDoodleTest {
 
         val doodle = Doodle(
             projectId = project.id!!,
+            projectUuid = project.uuid,
             nickname = "테스터",
             letter = "테스트 편지",
             imageUrl = "https://example.com/image.jpg"

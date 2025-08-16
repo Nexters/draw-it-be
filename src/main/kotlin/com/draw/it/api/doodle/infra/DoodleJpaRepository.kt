@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface DoodleJpaRepository : JpaRepository<Doodle, Long> {
     fun findByIdIn(ids: List<Long>): List<Doodle>
     fun findByProjectId(projectId: Long): List<Doodle>
+    fun findByProjectUuid(projectUuid: String): List<Doodle>
 }

@@ -29,6 +29,10 @@ class DoodleRepositoryImpl(
         return doodleJpaRepository.findByProjectId(projectId)
     }
 
+    override fun findByProjectUuid(projectUuid: String): List<Doodle> {
+        return doodleJpaRepository.findByProjectUuid(projectUuid)
+    }
+
     override fun delete(doodle: Doodle) {
         doodleJpaRepository.delete(doodle)
     }

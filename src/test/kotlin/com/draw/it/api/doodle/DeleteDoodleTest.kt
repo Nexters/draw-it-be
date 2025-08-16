@@ -23,6 +23,7 @@ class DeleteDoodleTest {
         // Given: 두들을 먼저 생성
         val doodle = com.draw.it.api.doodle.domain.Doodle(
             projectId = 1L,
+            projectUuid = "test-project-uuid",
             nickname = "테스트 닉네임",
             letter = "테스트 편지",
             imageUrl = "https://example.com/image.jpg"
@@ -46,6 +47,7 @@ class DeleteDoodleTest {
         // Given: 두들을 먼저 생성
         val doodle = com.draw.it.api.doodle.domain.Doodle(
             projectId = 1L,
+            projectUuid = "test-project-uuid",
             nickname = "테스트 닉네임",
             letter = "테스트 편지",
             imageUrl = "https://example.com/image.jpg"
@@ -68,6 +70,7 @@ class DeleteDoodleTest {
         // Given: 두들을 먼저 생성
         val doodle = com.draw.it.api.doodle.domain.Doodle(
             projectId = 1L,
+            projectUuid = "test-project-uuid",
             nickname = "테스트 닉네임",
             letter = "테스트 편지",
             imageUrl = "https://example.com/image.jpg"
@@ -103,6 +106,7 @@ class DeleteDoodleTest {
         // Given: 두들을 먼저 생성
         val doodle = com.draw.it.api.doodle.domain.Doodle(
             projectId = 1L,
+            projectUuid = "test-project-uuid",
             nickname = "테스트 닉네임",
             letter = "테스트 편지",
             imageUrl = "https://example.com/image.jpg"
@@ -125,12 +129,14 @@ class DeleteDoodleTest {
         // Given: 여러 두들을 생성
         val doodle1 = com.draw.it.api.doodle.domain.Doodle(
             projectId = 1L,
+            projectUuid = "test-project-uuid",
             nickname = "테스트 닉네임1",
             letter = "테스트 편지1",
             imageUrl = "https://example.com/image1.jpg"
         )
         val doodle2 = com.draw.it.api.doodle.domain.Doodle(
             projectId = 1L,
+            projectUuid = "test-project-uuid",
             nickname = "테스트 닉네임2",
             letter = "테스트 편지2",
             imageUrl = "https://example.com/image2.jpg"
