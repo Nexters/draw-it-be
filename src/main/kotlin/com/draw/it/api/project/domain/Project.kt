@@ -39,7 +39,7 @@ class Project(
 
     @Comment("에디터 배치 상태 (JSON 형태 텍스트)")
     @Column(name = "editor_coordination_state", columnDefinition = "TEXT")
-    val editorCoordinationState: String? = null,
+    var editorCoordinationState: String? = null,
 
     @Comment("프로젝트 식별자 UUID")
     @Column(name = "uuid", nullable = false)
@@ -60,5 +60,13 @@ class Project(
                 uuid = java.util.UUID.randomUUID().toString()
             )
         }
+    }
+
+    fun updateEditorCoordinationState(editorCoordinationState: String) {
+        this.editorCoordinationState = editorCoordinationState
+    }
+
+    fun validateOwnership(userId: Long) {
+        require(this.userId == userId) { "프로젝트에 대한 접근 권한이 없습니다." }
     }
 }
