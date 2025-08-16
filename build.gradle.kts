@@ -28,10 +28,15 @@ val kotlinLoggingVersion = "7.0.3"
 val springDocVersion = "2.7.0"
 val jwtVersion = "0.12.6"
 val awsVersion = "2.28.29"
+val bucket4jVersion = "8.10.1"
 dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j")
 	
 	implementation("software.amazon.awssdk:s3:${awsVersion}")
+
+    implementation("com.bucket4j:bucket4j-core:${bucket4jVersion}")
+    implementation("com.bucket4j:bucket4j-caffeine:${bucket4jVersion}")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")

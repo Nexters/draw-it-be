@@ -8,4 +8,4 @@ RUN mkdir /image-temp
 # 포트 오픈
 EXPOSE 8080
 
-ENTRYPOINT ["java","-Duser.timezone=Asia/Seoul", "-Dspring.profiles.active=prod", "-jar","/app.jar"]
+ENTRYPOINT ["java","-Duser.timezone=Asia/Seoul", "-Dspring.profiles.active=prod", "-Djava.net.preferIPv4Stack=true", "-jar","/app.jar"]

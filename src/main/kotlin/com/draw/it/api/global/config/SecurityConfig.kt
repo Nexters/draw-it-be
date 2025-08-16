@@ -1,6 +1,7 @@
 package com.draw.it.api.global.config
 
 import com.draw.it.api.auth.AuthenticateJwt
+import com.draw.it.api.global.filter.RateLimitFilter
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
@@ -19,7 +20,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    private val authenticateJwt: AuthenticateJwt
+    private val authenticateJwt: AuthenticateJwt,
+    private val rateLimitFilter: RateLimitFilter
 ) {
 
     @Bean
@@ -45,6 +47,7 @@ class SecurityConfig(
             .exceptionHandling { exceptions ->
                 exceptions.authenticationEntryPoint(unauthorizedEntryPoint())
             }
+            .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(authenticateJwt, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
