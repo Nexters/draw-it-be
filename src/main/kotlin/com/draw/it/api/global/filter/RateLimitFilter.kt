@@ -22,7 +22,7 @@ class RateLimitFilter(
     private val log = KotlinLogging.logger {}
 
     companion object {
-        private const val REQUESTS_PER_SECOND = 10L
+        private const val REQUESTS_PER_SECOND = 100L
     }
 
     override fun doFilterInternal(
@@ -36,6 +36,7 @@ class RateLimitFilter(
         if (bucket.tryConsume(1)) {
             filterChain.doFilter(request, response)
         } else {
+            log.error { "Exceeded bucket client ip: $clientIp" }
             sendRateLimitResponse(response)
         }
     }
