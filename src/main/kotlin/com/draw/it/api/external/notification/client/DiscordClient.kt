@@ -50,7 +50,7 @@ class DiscordClient(
         val discordMessage = DiscordMessage(
             embeds = listOf(
                 DiscordEmbeddedMessage(
-                    title = "📊 Draw It 일일 통계 (${metrics.date.minusDays(1)})",
+                    title = "📊 Draw It 일일 통계 (${metrics.date})",
                     color = BizNotificationType.INFO.color,
                     fields = listOf(
                         DiscordEmbeddedField(
