@@ -21,17 +21,17 @@ class GetProjectByPublic(
     @GetMapping("/{uuid}")
     fun getProjectByUuid(
         @PathVariable uuid: String
-    ): GetProjectResponse {
+    ): GetAnonymousProjectResponse {
         val project = projectRepository.findByUuid(uuid)
             ?: throw RuntimeException("Project not found with uuid: $uuid")
 
         return project.toResponse()
     }
 
-    private fun Project.toResponse(): GetProjectResponse {
+    private fun Project.toResponse(): GetAnonymousProjectResponse {
         val userName = getBasicUserInfo.getUserName(this.userId)
 
-        return GetProjectResponse(
+        return GetAnonymousProjectResponse(
             id = this.id!!,
             userId = this.userId,
             userName = userName,
@@ -45,7 +45,7 @@ class GetProjectByPublic(
         )
     }
 
-    data class GetProjectResponse(
+    data class GetAnonymousProjectResponse(
         val id: Long,
         val userId: Long,
         val userName: String?,
