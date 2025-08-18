@@ -30,4 +30,6 @@ interface CompletedProjectJpaRepository : JpaRepository<CompletedProject, Long> 
     fun findWithProjectNameByUserId(userId: Long): List<CompletedProjectWithName>
     
     fun countByCreatedAtBetween(startDate: LocalDateTime, endDate: LocalDateTime): Long
+    
+    fun deleteByProjectId(projectId: Long)
 }

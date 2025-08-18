@@ -25,4 +25,8 @@ class CompletedProjectRepositoryImpl(
     override fun findWithProjectNameByUserId(userId: Long): List<CompletedProjectWithName> {
         return jpaRepository.findWithProjectNameByUserId(userId)
     }
+
+    override fun deleteByProjectId(projectId: Long) {
+        jpaRepository.deleteByProjectId(projectId)
+    }
 }
