@@ -2,15 +2,11 @@ package com.draw.it.api
 
 import com.draw.it.api.completedproject.infra.ImageGenerator
 import com.draw.it.common.IntegrationTest
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.TestPropertySource
 import java.io.File
 
-@Disabled
 @IntegrationTest
-@TestPropertySource
 class ImageGeneratorTest {
 
     @Autowired
@@ -22,12 +18,12 @@ class ImageGeneratorTest {
         val drawingFile = createTestDrawingFile()
 
         // When - 그림을 실사화 이미지로 변환
-        val realisticImageUrl = imageGenerator.convertDrawingToRealistic(drawingFile)
+        val realisticImagePath = imageGenerator.convertDrawingToRealistic(drawingFile)
 
-        // Then - 변환된 이미지 URL이 반환되어야 함
-        assert(realisticImageUrl.isNotEmpty())
-        assert(realisticImageUrl.startsWith("https://"))
-        println("변환된 실사화 이미지 URL: $realisticImageUrl")
+        // Then - 변환된 이미지 파일 경로가 반환되어야 함
+        assert(realisticImagePath.isNotEmpty())
+        assert(File(realisticImagePath).exists())
+        println("변환된 실사화 이미지 경로: $realisticImagePath")
     }
 
     private fun createTestDrawingFile(): File {
