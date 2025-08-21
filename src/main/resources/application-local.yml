@@ -33,11 +33,28 @@ biz:
     etc-message: none
     metrics-message: none
 
+oauth:
+  facebook:
+    client-id: 123
+    client-secret: 123
+    callback-uri: FIXME
+  kakao:
+    client-id: 123
+    callback-uri: FIXME
+  google:
+    client-id: 123
+    client-secret: FIXME
+    callback-uri: FIXME
+
 aws:
   s3:
-    access-key: ${AWS_S3_ACCESS_KEY}
-    secret-key: ${AWS_S3_SECRET_KEY}
-    region: kr-standard
-    bucket-name: dodoodle
-    endpoint: https://kr.object.ncloudstorage.com
-    phase: local
+    access-key: FIXME
+    secret-key: FIXME
+    region: FIXME
+    bucket-name: FIXME
+    endpoint: FIXME
+    phase: FIXME
+
+llm:
+  openai:
+    api-key: FIXME
