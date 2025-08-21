@@ -47,31 +47,52 @@ class DiscordClient(
     override fun sendDailyMetrics(metrics: DailyMetrics) {
         val numberFormat = NumberFormat.getNumberInstance(Locale.KOREA)
         
+        val fields = mutableListOf(
+            DiscordEmbeddedField(
+                name = "📈 신규 생성",
+                value = """
+                    👥 사용자: **${numberFormat.format(metrics.newUsersToday)}명**
+                    📝 프로젝트: **${numberFormat.format(metrics.newProjectsToday)}개**
+                    🎨 낙서: **${numberFormat.format(metrics.newDoodlesToday)}개**
+                    🖼️ 완성된 작품: **${numberFormat.format(metrics.newCompletedProjectsToday)}개**
+                    💬 피드백: **${numberFormat.format(metrics.newFeedbacksToday)}개**
+                    ⭐ 오늘 평균 평점: **${String.format("%.1f", metrics.todayAverageRating)}점**
+                    
+                """.trimIndent()
+            ),
+            DiscordEmbeddedField(
+                name = "📊 전체 누적",
+                value = """
+                    👥 총 사용자: **${numberFormat.format(metrics.totalUsers)}명**
+                    📝 총 프로젝트: **${numberFormat.format(metrics.totalProjects)}개**
+                    🎨 총 낙서: **${numberFormat.format(metrics.totalDoodles)}개**
+                    🖼️ 총 완성된 작품: **${numberFormat.format(metrics.totalCompletedProjects)}개**
+                    💬 총 피드백: **${numberFormat.format(metrics.totalFeedbacks)}개**
+                    ⭐ 전체 평균 평점: **${String.format("%.1f", metrics.averageRating)}점**
+                """.trimIndent()
+            )
+        )
+        
+        if (metrics.todayFeedbackMessages.isNotEmpty()) {
+            val feedbackMessages = metrics.todayFeedbackMessages.take(10).joinToString("\n") { "• $it" }
+            fields.add(
+                DiscordEmbeddedField(
+                    name = "💬 오늘의 피드백 메시지",
+                    value = if (metrics.todayFeedbackMessages.size > 10) {
+                        "$feedbackMessages\n... 외 ${metrics.todayFeedbackMessages.size - 10}개"
+                    } else {
+                        feedbackMessages
+                    }
+                )
+            )
+        }
+        
         val discordMessage = DiscordMessage(
             embeds = listOf(
                 DiscordEmbeddedMessage(
                     title = "📊 Draw It 일일 통계 (${metrics.date})",
                     color = BizNotificationType.INFO.color,
-                    fields = listOf(
-                        DiscordEmbeddedField(
-                            name = "📈 신규 생성",
-                            value = """
-                                👥 사용자: **${numberFormat.format(metrics.newUsersToday)}명**
-                                📝 프로젝트: **${numberFormat.format(metrics.newProjectsToday)}개**
-                                🎨 낙서: **${numberFormat.format(metrics.newDoodlesToday)}개**
-                                🖼️ 완성된 작품: **${numberFormat.format(metrics.newCompletedProjectsToday)}개**
-                            """.trimIndent()
-                        ),
-                        DiscordEmbeddedField(
-                            name = "📊 전체 누적",
-                            value = """
-                                👥 총 사용자: **${numberFormat.format(metrics.totalUsers)}명**
-                                📝 총 프로젝트: **${numberFormat.format(metrics.totalProjects)}개**
-                                🎨 총 낙서: **${numberFormat.format(metrics.totalDoodles)}개**
-                                🖼️ 총 완성된 작품: **${numberFormat.format(metrics.totalCompletedProjects)}개**
-                            """.trimIndent()
-                        )
-                    )
+                    fields = fields
                 )
             )
         )
