@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestClient
 import java.io.File
-import java.nio.file.Files
-import java.util.*
 
 @Service
 class ImageGenerator(
@@ -52,17 +50,6 @@ class ImageGenerator(
         val b64JsonNode = imageNode.get("b64_json")
             ?: throw RuntimeException("이미지 객체에 'b64_json' 필드가 없습니다: $imageNode")
 
-        // Base64 데이터를 파일로 저장하고 경로 반환
-        return saveBase64ImageToFile(b64JsonNode.asText())
-    }
-
-    private fun saveBase64ImageToFile(base64Data: String): String {
-        val imageBytes = Base64.getDecoder().decode(base64Data)
-        val fileName = "realistic_image_${System.currentTimeMillis()}.png"
-        val imageFile = File(fileName)
-
-        Files.write(imageFile.toPath(), imageBytes)
-
-        return imageFile.absolutePath
+        return b64JsonNode.asText()
     }
 }
