@@ -54,31 +54,41 @@ class CreateDoodle(
 
         val savedDoodle = doodleRepository.save(doodle)
 
-        return CreateDoodleResponse.from(savedDoodle)
+        // 프로젝트의 모든 두들 조회
+        val allDoodles = doodleRepository.findByProjectId(project.id!!)
+        val otherDoodleImageUrls = allDoodles.filter { it.id != savedDoodle.id }.map { it.imageUrl }
+
+        return CreateDoodleResponse.from(
+            doodle = savedDoodle,
+            projectName = project.topic,
+            doodleCount = allDoodles.size,
+            myDoodleImageUrl = savedDoodle.imageUrl,
+            otherDoodleImageUrls = otherDoodleImageUrls
+        )
     }
 }
 
 data class CreateDoodleResponse(
-    val id: Long,
-    val projectId: Long,
-    val projectUuid: String,
-    val nickname: String,
-    val letter: String?,
-    val imageUrl: String,
-    val isNewDoodleConfirmed: Boolean,
-    val isDeleted: Boolean = false
+    val doodleId: Long,
+    val projectTopic: String,
+    val doodleCount: Int,
+    val myDoodleImageUrl: String,
+    val otherDoodleImageUrls: List<String>
 ) {
     companion object {
-        fun from(doodle: Doodle): CreateDoodleResponse {
+        fun from(
+            doodle: Doodle,
+            projectName: String,
+            doodleCount: Int,
+            myDoodleImageUrl: String,
+            otherDoodleImageUrls: List<String>
+        ): CreateDoodleResponse {
             return CreateDoodleResponse(
-                id = doodle.id!!,
-                projectId = doodle.projectId,
-                projectUuid = doodle.projectUuid,
-                nickname = doodle.nickname,
-                letter = doodle.letter,
-                imageUrl = doodle.imageUrl,
-                isNewDoodleConfirmed = doodle.isNewDoodleConfirmed,
-                isDeleted = doodle.isDeleted
+                doodleId = doodle.id!!,
+                projectTopic = projectName,
+                doodleCount = doodleCount,
+                myDoodleImageUrl = myDoodleImageUrl,
+                otherDoodleImageUrls = otherDoodleImageUrls
             )
         }
     }

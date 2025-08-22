@@ -61,6 +61,7 @@ class CreateDoodleTest {
         every { projectRepository.findByUuid("test-uuid") } returns project
         every { imageStorageService.uploadImage(mockImage) } returns "https://example.com/mock-image-url/test-image.jpg"
         every { doodleRepository.save(any<Doodle>()) } returns savedDoodle
+        every { doodleRepository.findByProjectId(1L) } returns listOf(savedDoodle)
 
         // When
         val response = createDoodle.createDoodle(
@@ -71,13 +72,11 @@ class CreateDoodleTest {
         )
 
         // Then
-        assertThat(response.id).isEqualTo(1L)
-        assertThat(response.projectId).isEqualTo(1L)
-        assertThat(response.projectUuid).isEqualTo("test-uuid")
-        assertThat(response.nickname).isEqualTo("테스트 닉네임")
-        assertThat(response.letter).isEqualTo("테스트 편지 내용")
-        assertThat(response.imageUrl).isEqualTo("https://example.com/mock-image-url/test-image.jpg")
-        assertThat(response.isNewDoodleConfirmed).isFalse()
+        assertThat(response.doodleId).isEqualTo(1L)
+        assertThat(response.projectTopic).isEqualTo("테스트 주제")
+        assertThat(response.doodleCount).isEqualTo(1)
+        assertThat(response.myDoodleImageUrl).isEqualTo("https://example.com/mock-image-url/test-image.jpg")
+        assertThat(response.otherDoodleImageUrls).isEmpty()
     }
 
     @Test
@@ -111,6 +110,7 @@ class CreateDoodleTest {
         every { projectRepository.findByUuid("test-uuid") } returns project
         every { imageStorageService.uploadImage(mockImage) } returns "https://example.com/mock-image-url/test-image.jpg"
         every { doodleRepository.save(any<Doodle>()) } returns savedDoodle
+        every { doodleRepository.findByProjectId(1L) } returns listOf(savedDoodle)
 
         // When
         val response = createDoodle.createDoodle(
@@ -121,13 +121,69 @@ class CreateDoodleTest {
         )
 
         // Then
-        assertThat(response.id).isEqualTo(1L)
-        assertThat(response.projectId).isEqualTo(1L)
-        assertThat(response.projectUuid).isEqualTo("test-uuid")
-        assertThat(response.nickname).isEqualTo("테스트 닉네임")
-        assertThat(response.letter).isNull()
-        assertThat(response.imageUrl).isEqualTo("https://example.com/mock-image-url/test-image.jpg")
-        assertThat(response.isNewDoodleConfirmed).isFalse()
+        assertThat(response.doodleId).isEqualTo(1L)
+        assertThat(response.projectTopic).isEqualTo("테스트 주제")
+        assertThat(response.doodleCount).isEqualTo(1)
+        assertThat(response.myDoodleImageUrl).isEqualTo("https://example.com/mock-image-url/test-image.jpg")
+        assertThat(response.otherDoodleImageUrls).isEmpty()
+    }
+
+    @Test
+    fun `기존 두들이 있는 프로젝트에 새로운 두들을 생성한다`() {
+        // Given
+        val mockImage = MockMultipartFile(
+            "image",
+            "test-image.jpg",
+            "image/jpeg",
+            "test image content".toByteArray()
+        )
+        
+        val project = Project(
+            id = 1L,
+            userId = 1L,
+            topic = "테스트 주제",
+            message = "테스트 메시지",
+            backgroundColor = "#FFFFFF",
+            uuid = "test-uuid"
+        )
+        
+        val existingDoodle = Doodle(
+            id = 2L,
+            projectId = 1L,
+            projectUuid = "test-uuid",
+            nickname = "기존 닉네임",
+            letter = "기존 편지",
+            imageUrl = "https://example.com/existing-image.jpg"
+        )
+        
+        val newDoodle = Doodle(
+            id = 1L,
+            projectId = 1L,
+            projectUuid = "test-uuid",
+            nickname = "새로운 닉네임",
+            letter = "새로운 편지",
+            imageUrl = "https://example.com/new-image.jpg"
+        )
+        
+        every { projectRepository.findByUuid("test-uuid") } returns project
+        every { imageStorageService.uploadImage(mockImage) } returns "https://example.com/new-image.jpg"
+        every { doodleRepository.save(any<Doodle>()) } returns newDoodle
+        every { doodleRepository.findByProjectId(1L) } returns listOf(existingDoodle, newDoodle)
+
+        // When
+        val response = createDoodle.createDoodle(
+            projectUuid = "test-uuid",
+            nickname = "새로운 닉네임",
+            letter = "새로운 편지",
+            image = mockImage
+        )
+
+        // Then
+        assertThat(response.doodleId).isEqualTo(1L)
+        assertThat(response.projectTopic).isEqualTo("테스트 주제")
+        assertThat(response.doodleCount).isEqualTo(2)
+        assertThat(response.myDoodleImageUrl).isEqualTo("https://example.com/new-image.jpg")
+        assertThat(response.otherDoodleImageUrls).containsExactly("https://example.com/existing-image.jpg")
     }
 
     @Test

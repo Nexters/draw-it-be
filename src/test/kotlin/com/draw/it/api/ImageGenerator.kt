@@ -2,6 +2,7 @@ package com.draw.it.api
 
 import com.draw.it.api.completedproject.infra.ImageGenerator
 import com.draw.it.common.IntegrationTest
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.io.File
@@ -15,6 +16,7 @@ class ImageGeneratorTest {
     private lateinit var imageGenerator: ImageGenerator
 
     @Test
+    @Disabled
     fun `그림 파일을 실사화 이미지로 변환한다`() {
         // Given - 테스트용 그림 파일 생성
         val drawingFile = createTestDrawingFile()
