@@ -24,6 +24,7 @@ class GetCompletedProjects(
         val completedProjectsWithName = completedProjectRepository.findWithProjectNameByUserId(userId)
         val responses = completedProjectsWithName.map { completedProjectWithName ->
             CompletedProjectResponse(
+                completedProjectId = completedProjectWithName.id,
                 projectId = completedProjectWithName.projectId,
                 projectName = completedProjectWithName.projectName,
                 createdAt = completedProjectWithName.createdAt,
@@ -36,6 +37,7 @@ class GetCompletedProjects(
 }
 
 data class CompletedProjectResponse(
+    val completedProjectId: Long,
     val projectId: Long,
     val projectName: String,
     val createdAt: LocalDateTime,

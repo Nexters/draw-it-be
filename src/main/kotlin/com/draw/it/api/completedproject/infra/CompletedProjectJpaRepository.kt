@@ -17,6 +17,7 @@ interface CompletedProjectJpaRepository : JpaRepository<CompletedProject, Long> 
     
     @Query("""
         SELECT new com.draw.it.api.completedproject.domain.CompletedProjectWithName(
+            cp.id,
             cp.projectId, 
             cp.imageUrl, 
             p.topic, 
